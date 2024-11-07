@@ -1,0 +1,33 @@
+<div class="body">
+<div class="form-div">
+  <h2 class="heading">LocalEyes</h2>
+  <form class="form" (ngSubmit)="login()" [formGroup]="form">
+      <div class="p-field">
+        <p-floatLabel>
+          <input id="username" type="text" pInputText formControlName="username"/>
+          <label for="username">Username*</label>
+        </p-floatLabel>
+      </div>
+
+
+      <div class="p-field">
+        <p-floatLabel>
+          <p-password 
+            id="password"
+            formControlName="password"
+            [toggleMask]="true"
+            [feedback]="false"
+            [style]="{ width: '100%' }"
+            class="password"
+          />
+          <label for="password">Password*</label>
+        </p-floatLabel>
+      </div>
+      <div class="button-link">
+        <button pButton type="submit" label="Login" [disabled]="form.invalid" ></button>
+        <span>Not a user ? </span>
+        <span class="login-link" [routerLink]="'/signup'" >Signup</span>
+      </div>
+  </form>
+  </div>
+</div>

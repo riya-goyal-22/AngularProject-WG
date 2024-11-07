@@ -1,0 +1,7 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --buttonGreen: rgb(95, 129, 95);
+  --textGreen: rgb(57, 107, 57);
+  --shadowBox: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  --gradientGreen: linear-gradient(rgb(143, 166, 133),rgb(174, 197, 166));
+}

@@ -1,0 +1,41 @@
+.field {
+  display: flex;
+  align-items: center;
+  margin-block: 1%;
+}
+
+.text {
+  text-align: justify;
+  margin-right: 10%;
+}
+
+.button {
+  color: rgba(245, 245, 245, 0.845);
+  font-weight: 500;
+  width: 100%;
+  margin: 0;
+}
+
+.btn {
+  display: flex;
+}
+
+.trash-btn {
+  color: rgb(188, 60, 60);
+  background: none;
+  border: none;
+}
+
+.answers button {
+  color: black;
+}
+
+.question {
+  background: var(--gradientGreen);
+  border-radius: 50px;
+  padding-inline: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+}

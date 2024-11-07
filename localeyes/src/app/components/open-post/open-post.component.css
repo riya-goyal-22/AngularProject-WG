@@ -1,0 +1,78 @@
+/* Overlay background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(249, 253, 249, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Overlay content box */
+.overlay-content {
+  position: relative;
+  width: 80%;
+  height: 50%;
+  max-width: 500px;
+  padding: 20px;
+  background-image: url(../../../assets/background.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  border-top-left-radius: 70px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.head {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem;
+}
+
+#user {
+  display: flex;
+  flex-direction: column;
+}
+
+#user p {
+  margin: 0;
+  font-size: large;
+}
+
+.sub-head p{
+  font-style: italic;
+  font-weight: 600;
+  font-size: larger;
+  color: rgb(85, 83, 83);
+}
+
+.content {
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  background-color: rgba(249, 253, 249, 0.7);
+  border-radius: 4px;
+}
+
+.foot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 3%;
+  cursor: pointer;
+}

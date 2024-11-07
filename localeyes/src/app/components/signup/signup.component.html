@@ -1,0 +1,55 @@
+<div class="body">
+  <div class="form-div">
+    <h2 class="heading">LocalEyes</h2>
+    <form class="form" (ngSubmit)="submit()" [formGroup]="form">
+
+      <div class="p-field">
+        <p-floatLabel>
+          <input id="username" type="text" pInputText formControlName="username" />
+          <label for="username">Username</label>
+        </p-floatLabel>
+        @if (usernameNotAvailable) {
+          <p class="error-message">Username already exist</p>
+        }
+      </div>
+
+      <div class="p-field">
+        <p-floatLabel>
+          <p-password
+            id="password"
+            formControlName="password"
+            [toggleMask]="true"
+            [style]="{ width: '100%' }"
+            class="password"
+          ></p-password>
+          <label for="password">Password</label>
+        </p-floatLabel>
+      </div>
+
+      <div class="p-field">
+        <p-floatLabel>
+          <input id="city" formControlName="city" pInputText type="text" placeholder=" " />
+          <label for="city">City</label>
+        </p-floatLabel>
+      </div>
+
+      <label>Duration Living in City:</label>
+      <div formGroupName="duration" class="p-grid">
+        <div class="p-col">
+          <input id="years" formControlName="years" pInputText type="number" placeholder="Years" min="0" required />
+        </div>
+        <div class="p-col">
+          <input id="months" formControlName="months" pInputText type="number" placeholder="Months" min="0" max="11" required />
+        </div>
+        <div class="p-col">
+          <input id="days" formControlName="days" pInputText type="number" placeholder="Days" min="0" max="30" required />
+        </div>
+      </div>
+      <div class="button-link">
+        <button pButton type="submit" label="Sign Up" [disabled]="form.invalid && form.get('duration')?.invalid"></button>
+        <span>Already a user? </span>
+        <span class="login-link" [routerLink]="'/login'">Login</span>
+      </div>
+    </form>
+  </div>
+</div>

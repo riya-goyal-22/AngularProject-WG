@@ -1,0 +1,34 @@
+<div class="header">
+  <img
+    src="../../../assets/logo.png"
+    alt="logo"
+    class="logo">
+  <div class="actions">
+    <p-button 
+      label="Post"
+      icon="pi pi-plus"
+      [text]="true"
+      [plain]="true"
+      [routerLink]="'/post-form'"
+      class="button"
+    />
+    <p-button 
+      icon="pi pi-bell" 
+      [text]="true"
+      [plain]="true"
+      class="button"
+      [routerLink]="['/notifications']"
+    />
+      <img 
+        src="../../../assets/avatar.png"
+        alt="avatar" class="profile">
+
+        <!-- <p-dropdown 
+          [options]="options"
+          appendTo="body" 
+          [(ngModel)]="selectedOption"
+          class="custom-dropdown">
+        </p-dropdown> -->
+
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="body">
+  <div class="form-div">
+    <h2 class="heading">Post</h2>
+    <form [formGroup]="form" class="form" (ngSubmit)="submit()">
+        <div class="p-field">
+          <p-floatLabel>
+            <input id="title" type="text" pInputText formControlName="title"/>
+            <label for="title">Post Title</label>
+          </p-floatLabel>
+        </div>
+  
+        <div class="p-field">
+          <p-floatLabel>
+            <textarea 
+              id="content"
+              pInputTextarea 
+              rows="2"
+              cols="50%" 
+              class="content"
+              formControlName="content"
+              >
+            </textarea>
+            <label for="content">Post Content</label>
+          </p-floatLabel>
+        </div>
+
+        <div class="p-field">
+          <p-dropdown 
+            [options]="filters"
+            formControlName="selectedFilter" 
+            class="custom-dropdown"
+            placeholder="Filter"
+            [style]="{width: '100%'}"
+          />
+        </div>
+        <div class="button"> 
+          <button
+            pButton
+            type="submit"
+            label="Post"
+            [disabled]="form.invalid"
+          ></button>
+        </div>
+    </form>
+    </div>
+  </div>
+  

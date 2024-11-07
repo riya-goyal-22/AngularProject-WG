@@ -1,0 +1,77 @@
+<div class="post">
+  <div class="post-head">
+    <img 
+      src="../../../assets/avatar.png"
+      alt="avatar" class="avatar"
+    />
+    <span>User Name</span>
+  </div>
+  @if (post().type === 'travel'){
+    <div class="img-div" (click)="openPost()">
+      <img
+        src="../../../assets/travel1.avif"
+        alt="post-image" class="post-image"
+      />
+    </div>
+  }
+  @if (post().type === 'other'){
+    <div class="img-div" (click)="openPost()">
+      <img 
+        src="../../../assets/travel1.avif"
+        alt="post-image" class="post-image"
+      />
+    </div>
+  }
+  @if (post().type === 'food'){
+    <div class="img-div" (click)="openPost()">
+      <img
+        src="../../../assets/food1.webp"
+        alt="post-image" class="post-image"
+      />
+    </div>
+  }
+  @if (post().type === 'shopping'){
+    <div class="img-div" (click)="openPost()">
+      <img 
+        src="../../../assets/shopping4.avif"
+        alt="post-image" class="post-image"
+      />
+    </div>
+  }
+  <div>
+    <p>{{post().title}}</p>
+  </div>
+  <div class="post-foot">
+    <div class="likes">
+      @if (isHighlight) {
+        <i 
+          (click)="like()"
+          class="pi pi-heart-fill"
+          style="
+            font-size: 1rem;
+            color: rgb(220, 63, 63);
+            margin-left: 1%;
+            margin-right: 10%;"
+        ></i>
+      }@else {
+        <i 
+          (click)="like()"
+          class="pi pi-heart"
+          style="
+            font-size: 1rem;
+            color: rgb(11, 11, 11);
+            margin-left: 1%;
+            margin-right: 10%;"
+        ></i>
+      }
+      <span>{{post().likes}}</span>
+    <!-- </div>
+    <i
+      class="pi pi-comment"
+      style="
+        font-size: 1rem;
+        color: rgb(11, 11, 11);
+        margin-left: 1%;"
+      ></i>
+  </div> -->
+</div>

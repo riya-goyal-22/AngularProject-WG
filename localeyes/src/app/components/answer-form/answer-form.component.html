@@ -1,0 +1,25 @@
+<form class="form" (ngSubmit)="Add()" [formGroup]="form">
+    <div class="p-field">
+      <p-floatLabel>
+        <textarea 
+          id="answer"
+          pInputTextarea 
+          rows="3"
+          cols="30%" 
+          class="content"
+          formControlName="answer"
+          >
+        </textarea>
+        <label for="answer">Add your answer 📝</label>
+      </p-floatLabel>
+    </div>
+
+  <div class="button-link">
+    <button
+      pButton
+      type="submit"
+      label="Add Answer"
+      [disabled]="form.invalid"
+    ></button>
+  </div>
+</form>

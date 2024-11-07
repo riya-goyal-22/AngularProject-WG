@@ -1,0 +1,36 @@
+.avatar {
+  width: 15%;
+  margin-right: 2%;
+}
+
+.post-image {
+  width: 100%;
+}
+
+.post-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2%;
+}
+
+.img-div {
+  display: flex;
+  justify-content: center;
+}
+
+.post-foot {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post {
+  width:100%;
+  padding: 2%;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 2%;
+}
+
+.likes {
+  display: flex;
+}
+

@@ -1,0 +1,1 @@
+export const Filters: string[] = ['Food','Travel','Shopping','Other'];

@@ -1,0 +1,48 @@
+.profile {
+  width: 50px;
+}
+
+.logo {
+  width: 100px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1%;
+  margin: 0;
+  background-image: url('../../../assets/header4.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  color: black;
+  font-weight: 700;
+  margin-right: 2%;
+}
+
+::ng-deep .custom-dropdown .p-dropdown {
+  width:100% !important;
+  border: none !important; /* Remove the border */
+  box-shadow: none !important; /* Remove shadow if present */
+  margin: 0 !important; 
+  padding: 0 !important; /* Remove any padding */
+}
+
+::ng-deep .custom-dropdown .p-dropdown-label {
+  padding: 0 !important; /* Remove padding for label */
+  margin: auto !important; /* Remove margin for label */
+}
+
+
+
+

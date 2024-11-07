@@ -1,0 +1,23 @@
+@if (service.isPostClicked()){
+  <div class="overlay" (click)="closeOverlay()">
+    <div class="overlay-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeOverlay()">×</button>
+      <div class="head">
+        <div id="user">
+          <img src="../../../assets/avatar.png" alt="avatar">
+          <p>Username</p>
+        </div>
+      </div>
+      <div class="sub-head">
+        <p>Listen what user thinks about this place 😁</p>
+      </div>
+      <div class="content">
+        <p>{{post.content}}</p>
+      </div>
+      <div class="foot" (click)="openQuestions()" >
+        <p>Ask Question 🙋🏻‍♂️</p>
+      </div>
+    </div>
+  </div>
+}
+

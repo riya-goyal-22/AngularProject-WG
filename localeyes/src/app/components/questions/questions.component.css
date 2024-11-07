@@ -1,0 +1,28 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--textGreen);
+  font-size: 1.4rem;
+  font-style: oblique;
+}
+
+.head button {
+  background-color: var(--buttonGreen);
+  border: none;
+}
+
+.container {
+  padding: 2%;
+}
+
+
+::ng-deep .custom-dialog .p-dialog {
+  width: 500px !important;
+  background-color: rgb(147, 98, 59) !important;
+}
+
+
+
+
+

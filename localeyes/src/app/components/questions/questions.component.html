@@ -1,0 +1,22 @@
+<app-header/>
+<div class="container">
+  <div class="head">
+    <h1>Questions</h1>
+    <div>
+      <button pButton (click)="showQuestionForm()" label="Add Question"></button>
+      <p-dialog
+        header="Question Form"
+        [(visible)]="service.isAddQuestion"
+        [modal]="true"
+        class="custom-dialog"
+      >
+        <app-question-form/>
+      </p-dialog>
+    </div>
+  </div>
+  <div class="questions" >
+    @for (question of service.questions(); track $index) {
+      <app-question [question]="question"/>
+    }
+  </div>
+</div>
