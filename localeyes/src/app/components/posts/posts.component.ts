@@ -1,30 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, computed, inject, input, signal } from '@angular/core';
+
 import { PostService } from '../../services/post.service';
-import { CustomResponse } from '../../modals/modals';
-import { Filters } from '../../constants/constants';
+import { Post } from '../../modals/modals';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
   styleUrl: './posts.component.css'
 })
-export class PostsComponent implements OnInit {
-  filters = Filters;
-  service = inject(PostService)
-  form = new FormGroup({
-    selectedFilter: new FormControl(null)
-  })
-  options = ['All Posts','My Posts'];
+export class PostsComponent {
+  postService = inject(PostService);
+  view = input.required<"home"|"profile">();
 
-  ngOnInit() {
-    setTimeout(() => {
-      localStorage.removeItem('token');
-    },3600000);
-    this.service.getAllPosts().subscribe({
-      next: (response: CustomResponse) => {
-        this.service.posts.set(response.data)
-      }
-    })
-  }
+  posts = computed(() => this.postService.posts());
+  userPosts = computed(() => this.postService.userPosts());
+
 }

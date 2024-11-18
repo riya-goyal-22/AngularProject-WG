@@ -1,41 +1,61 @@
 <div class="field">
   <div class="question">
     <div class="text">
-      <p>{{question().question_text}}</p>
+      <p>{{question().text}}</p>
     </div>
-    <div class="btn">
-      <button 
-        pButton
-        label="Add Answer"
-        (click)="showAnswerForm()"
-        [text]="true"
-        icon="pi pi-pencil"
-        iconPos="right"
-        class="button"
-      ></button>
-      <p-dialog
-        header="Answer Form"
-        [(visible)]="service.isAddAnswer"
-        [modal]="true"
-        class="custom-dialog"
-      >
-        <app-answer-form/>
-      </p-dialog>
-      <button 
-        pButton
-        icon="pi pi-trash"
-        iconPos="right"
-        class="trash-btn"
-      ></button>
-    </div>
+
+    @if(postService.isDisplayingAdmin()) {
+      <div class="btn">
+        <button pButton icon="pi pi-trash" iconPos="right" class="trash-btn" (click)="deleteByAdmin()" ></button>
+      </div>
+    }
+
+    @if(!postService.isDisplayingAdmin()) {
+      <div class="btn">
+        <button
+          pButton
+          (click)="showAnswerForm()"
+          [text]="true"
+          icon="pi pi-pencil"
+          iconPos="right"
+          pTooltip="Add Answer"
+          [tooltipStyleClass]="'custom-tooltip'"
+          tooltipEvent="hover"
+          tooltipPosition="bottom"
+          class="button"
+        ></button>
+        <button
+          pButton
+          class="eye-btn"
+          [text]="true"
+          pTooltip="View Answers"
+          tooltipEvent="hover"
+          tooltipPosition="bottom"
+          icon="pi pi-eye"
+          iconPos="left"
+          (click)="showAnswers()"
+        ></button>
+        <button
+          pButton
+          icon="pi pi-trash"
+          iconPos="right"
+          class="trash-btn"
+          pTooltip="Delete Question"
+          tooltipEvent="hover"
+          tooltipPosition="bottom"
+          (click)="delete()"
+          severity="danger"
+        ></button>
+      </div>
+    }
   </div>
-  <div class="answers">
-    <button 
-      pButton
-      label="View Answer"
-      [text]="true"
-      icon="pi pi-eye"
-      iconPos="left"
-    ></button>
-  </div>
+  <p-dialog
+    header="Answer Form"
+    [(visible)]="service.isAddAnswer"
+    [modal]="true"
+    class="custom-dialog"
+  >
+  <app-answer-form/>
+  </p-dialog>
 </div>
+

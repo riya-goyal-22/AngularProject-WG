@@ -25,8 +25,14 @@
       </div>
       <div class="button-link">
         <button pButton type="submit" label="Login" [disabled]="form.invalid" ></button>
-        <span>Not a user ? </span>
-        <span class="login-link" [routerLink]="'/signup'" >Signup</span>
+        <div>
+          <span>Not a user ? </span>
+          <span class="login-link" [routerLink]="'/signup'" >Signup 🤝</span>
+        </div>
+        <div>
+          <p></p>
+          <span class="reset-link" [routerLink]="'/forgot-password'" >Forgot Password 🤔</span>
+        </div>
       </div>
   </form>
   </div>

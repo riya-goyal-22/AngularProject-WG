@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+
 import { QuestionService } from '../../services/question.service';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-questions',
@@ -8,7 +10,8 @@ import { QuestionService } from '../../services/question.service';
 })
 export class QuestionsComponent {
   service = inject(QuestionService);
-  
+  questions = computed(() => this.service.questions());
+  postService = inject(PostService);
 
   showQuestionForm() {
     this.service.isAddQuestion = true;

@@ -1,0 +1,30 @@
+<div class="notification">
+  <div class="flex">
+    <img src="../../../assets/avatar.png" alt="avatar">
+    <div class="margin-left">
+      <p>{{user().username}}</p>
+    </div>
+  </div>
+  <div class="buttons">
+    @if(!user().active_status) {
+      <div>
+        <button 
+          pButton type="submit"
+          label="Reactivate"
+          [text]="true"
+          class="reactive-btn"
+          (click)="reactivate()"
+        ></button>
+      </div>
+    }
+    <div>
+      <button
+        pButton type="submit"
+        icon="pi pi-trash"
+        [text]="true"
+        (click)="delete()"
+        class="trash"
+      ></button>
+    </div>
+  </div>
+</div>

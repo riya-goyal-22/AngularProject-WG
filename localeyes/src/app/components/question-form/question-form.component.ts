@@ -1,6 +1,12 @@
 import { Component, inject, output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+
+import { MessageService } from 'primeng/api';
+
+import { QuestionService } from '../../services/question.service';
+import { CustomResponse, NewQuestion } from '../../modals/modals';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-question-form',
@@ -8,8 +14,14 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './question-form.component.css'
 })
 export class QuestionFormComponent {
-  service = inject(AuthService);
-  close = output<void>();
+  questionService = inject(QuestionService);
+  postService = inject(PostService);
+
+  question: NewQuestion = {
+    question: ''
+  };
+  messageService = inject(MessageService);
+  router = inject(Router);
 
   form: FormGroup = new FormGroup({
     question: new FormControl('',[Validators.required]),
@@ -17,7 +29,24 @@ export class QuestionFormComponent {
 
   Add() {
     if (this.form.valid) {
-      
+      this.question.question = this.form.controls['question'].value
+      this.questionService.addQuestion(this.question).subscribe({
+        next:() => {
+          this.form.reset();
+          this.messageService.add({
+            severity:'success',
+            summary: 'Success',
+            detail: 'Successfully added question'
+          })
+          this.questionService.getAllquestions().subscribe({
+            next: (response: CustomResponse) => {
+              this.questionService.questions.set(response.data)
+            }
+          })
+          this.postService.isPostClicked.set(false);
+        }
+      })
+      this.questionService.isAddQuestion = false;
     }
   }
 }

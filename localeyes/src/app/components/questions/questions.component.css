@@ -16,10 +16,12 @@
   padding: 2%;
 }
 
+.no-content {
+  font-weight: 600;
+}
 
-::ng-deep .custom-dialog .p-dialog {
+:host::ng-deep .custom-dialog .p-dialog {
   width: 500px !important;
-  background-color: rgb(147, 98, 59) !important;
 }
 
 

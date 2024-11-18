@@ -5,7 +5,7 @@
         <div class="p-field">
           <p-floatLabel>
             <input id="title" type="text" pInputText formControlName="title"/>
-            <label for="title">Post Title</label>
+            <label for="title">Post Title*</label>
           </p-floatLabel>
         </div>
   
@@ -14,13 +14,13 @@
             <textarea 
               id="content"
               pInputTextarea 
-              rows="2"
-              cols="50%" 
+              rows="4"
+              cols="30%" 
               class="content"
               formControlName="content"
               >
             </textarea>
-            <label for="content">Post Content</label>
+            <label for="content">Post Content*</label>
           </p-floatLabel>
         </div>
 
@@ -29,15 +29,15 @@
             [options]="filters"
             formControlName="selectedFilter" 
             class="custom-dropdown"
-            placeholder="Filter"
+            placeholder="Category"
             [style]="{width: '100%'}"
           />
         </div>
-        <div class="button"> 
+        <div class="button">
           <button
             pButton
             type="submit"
-            label="Post"
+            label="Submit"
             [disabled]="form.invalid"
           ></button>
         </div>

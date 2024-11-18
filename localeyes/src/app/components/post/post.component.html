@@ -1,10 +1,34 @@
 <div class="post">
   <div class="post-head">
-    <img 
-      src="../../../assets/avatar.png"
-      alt="avatar" class="avatar"
-    />
-    <span>User Name</span>
+    <div id="post-head">
+      <div>
+        <img 
+          src="../../../assets/avatar.png"
+          alt="avatar" class="avatar"
+        />
+      </div>
+      <div class="margin-left">
+        <span>{{postMaker.username}}</span>
+      </div>
+    </div>
+    <div *appEditPost="service.isDisplayingProfile()">
+      <p-menu #menu [model]="items" [popup]="true"></p-menu>
+        <p-button
+          class="menu-btn"
+          (onClick)="menu.toggle($event)"
+          icon="pi pi-ellipsis-v"
+        ></p-button>
+    </div>
+    @if (service.isDisplayingAdmin()) {
+      <div>
+        <p-button
+          class="menu-btn"
+          (onClick)="deletePost()"
+          icon="pi pi-trash"
+          severity="danger"
+        ></p-button>
+      </div>
+    }
   </div>
   @if (post().type === 'travel'){
     <div class="img-div" (click)="openPost()">
@@ -43,7 +67,7 @@
   </div>
   <div class="post-foot">
     <div class="likes">
-      @if (isHighlight) {
+      @if (isHighlight()) {
         <i 
           (click)="like()"
           class="pi pi-heart-fill"
@@ -64,14 +88,19 @@
             margin-right: 10%;"
         ></i>
       }
+      <!-- <i
+  (click)="!isProcessing() && like()"
+  class="pi"
+  [class.pi-heart-fill]="isHighlight()"
+  [class.pi-heart]="!isHighlight()"
+  [ngStyle]="{
+    'font-size': '1rem',
+    'color': isHighlight() ? 'rgb(220, 63, 63)' : 'rgb(11, 11, 11)',
+    'margin-left': '1%',
+    'margin-right': '10%',
+    'opacity': isProcessing() ? '0.5' : '1',
+    'cursor': isProcessing() ? 'default' : 'pointer'
+  }"
+></i> -->
       <span>{{post().likes}}</span>
-    <!-- </div>
-    <i
-      class="pi pi-comment"
-      style="
-        font-size: 1rem;
-        color: rgb(11, 11, 11);
-        margin-left: 1%;"
-      ></i>
-  </div> -->
 </div>

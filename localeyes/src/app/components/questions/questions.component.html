@@ -1,22 +1,43 @@
-<app-header/>
-<div class="container">
-  <div class="head">
-    <h1>Questions</h1>
-    <div>
-      <button pButton (click)="showQuestionForm()" label="Add Question"></button>
-      <p-dialog
-        header="Question Form"
-        [(visible)]="service.isAddQuestion"
-        [modal]="true"
-        class="custom-dialog"
-      >
-        <app-question-form/>
-      </p-dialog>
+@if(postService.isDisplayingAdmin()) {
+  <app-header/>
+  <div class="container">
+    <div class="head">
+      <h1>Questions</h1>
+    </div>
+    <div class="questions" >
+      @for (question of questions(); track $index) {
+        <app-question [question]="question"/>
+      }
     </div>
   </div>
-  <div class="questions" >
-    @for (question of service.questions(); track $index) {
-      <app-question [question]="question"/>
-    }
+  <app-answers/>
+}@else {
+  <app-header/>
+  <div class="container">
+    <div class="head">
+      <h1>Questions</h1>
+      <div>
+        <button pButton (click)="showQuestionForm()" label="Add Question"></button>
+        <p-dialog
+          header="Question Form"
+          [(visible)]="service.isAddQuestion"
+          [modal]="true"
+          class="custom-dialog"
+        >
+          <app-question-form/>
+        </p-dialog>
+      </div>
+    </div>
+    <div class="questions" >
+      @for (question of questions(); track $index) {
+        <app-question [question]="question"/>
+      }
+      @if (questions()?.length == 0) {
+        <div class="no-content">
+          <p>No Questions to display</p>
+        </div>
+      }
+    </div>
   </div>
-</div>
+  <app-answers/>
+}

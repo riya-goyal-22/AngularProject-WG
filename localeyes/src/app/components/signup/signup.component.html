@@ -13,23 +13,60 @@
         }
       </div>
 
-      <div class="p-field">
-        <p-floatLabel>
-          <p-password
-            id="password"
-            formControlName="password"
-            [toggleMask]="true"
-            [style]="{ width: '100%' }"
-            class="password"
-          ></p-password>
-          <label for="password">Password</label>
-        </p-floatLabel>
-      </div>
+      @if(isEditMode) {
+        <div class="p-field">
+          <p-floatLabel>
+            <p-password
+              id="password"
+              formControlName="oldPassword"
+              [feedback]="false"
+              [style]="{ width: '100%' }"
+              class="password"
+            ></p-password>
+            <label for="password">Old Password</label>
+          </p-floatLabel>
+        </div>
+      }
+
+      @if(isEditMode) {
+        <div class="p-field">
+          <p-floatLabel>
+            <p-password
+              id="password"
+              formControlName="newPassword"
+              [toggleMask]="true"
+              [style]="{ width: '100%' }"
+              class="password"
+            ></p-password>
+            <label for="password">New Password</label>
+          </p-floatLabel>
+        </div>
+      }@else {
+        <div class="p-field">
+          <p-floatLabel>
+            <p-password
+              id="password"
+              formControlName="newPassword"
+              [toggleMask]="true"
+              [style]="{ width: '100%' }"
+              class="password"
+            ></p-password>
+            <label for="password">Password</label>
+          </p-floatLabel>
+        </div>
+      }
 
       <div class="p-field">
         <p-floatLabel>
           <input id="city" formControlName="city" pInputText type="text" placeholder=" " />
           <label for="city">City</label>
+        </p-floatLabel>
+      </div>
+
+      <div class="p-field">
+        <p-floatLabel>
+          <input id="answer" formControlName="securityAnswer" pInputText type="text" placeholder=" " />
+          <label for="answer">Your Nickname + favourite food😋</label>
         </p-floatLabel>
       </div>
 
@@ -46,9 +83,35 @@
         </div>
       </div>
       <div class="button-link">
-        <button pButton type="submit" label="Sign Up" [disabled]="form.invalid && form.get('duration')?.invalid"></button>
-        <span>Already a user? </span>
-        <span class="login-link" [routerLink]="'/login'">Login</span>
+        @if(isEditMode) {
+          <button
+          pButton
+          type="submit"
+          label="Submit"
+          [disabled]="
+            form.get('username')?.invalid 
+            && form.get('newPassword')?.invalid
+            && form.get('securityAnswer')?.invalid
+            && form.get('city')?.invalid
+            && form.get('duration')?.invalid 
+            && form.get('oldPassword')?.invalid"
+        ></button>
+        }@else {
+          <button 
+          pButton 
+          type="submit"
+          label="Sign Up"
+          [disabled]="
+            form.get('username')?.invalid 
+            && form.get('newPassword')?.invalid
+            && form.get('securityAnswer')?.invalid
+            && form.get('city')?.invalid
+            && form.get('duration')?.invalid  
+            && form.get('duration')?.invalid"
+            ></button>
+          <span>Already a user? </span>
+          <span class="login-link" [routerLink]="'/login'">Login</span>
+        }
       </div>
     </form>
   </div>

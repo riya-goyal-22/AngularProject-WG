@@ -1,8 +1,10 @@
-import { Component, inject, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { PostService } from '../../services/post.service';
 import { Post, Question } from '../../modals/modals';
-import { Router } from '@angular/router';
 import { QuestionService } from '../../services/question.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-open-post',
@@ -12,7 +14,8 @@ import { QuestionService } from '../../services/question.service';
 export class OpenPostComponent implements OnInit{
   service = inject(PostService);
   router = inject(Router);
-  questionService = inject(QuestionService); 
+  questionService = inject(QuestionService);
+  userService = inject(UserService); 
 
   post: Post = {
     post_id: '',
@@ -22,7 +25,8 @@ export class OpenPostComponent implements OnInit{
     type: 'food',
     created_at: '',
     likes: 0,
-    questions: null
+    users: null,
+    questions: []
   }
 
   ngOnInit() {
@@ -36,7 +40,8 @@ export class OpenPostComponent implements OnInit{
           type: response.data.type,
           created_at: response.data.created_at,
           likes: response.data.likes,
-          questions: response.data.questions
+          questions: response.data.questions,
+          users: response.data.users,
         }
       }
     })

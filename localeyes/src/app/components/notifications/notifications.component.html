@@ -1,19 +1,13 @@
-<div class="header">
-  <img src="../../../assets/logo.png" alt="logo">
-</div>
+<app-header/>
 <div class="heading">
   <h1>
     Notifications
   </h1>
 </div>
 <div class="notifications">
-  <div class="notification">
-    <p>Content</p>
-  </div>
-  <div class="notification">
-    <p>Content</p>
-  </div>
-  <div class="notification">
-    <p>Content</p>
-  </div>
+  @for (notification of userService.userNotifications(); track $index) {
+    <div class="notification">
+      <p>{{notification}}</p>
+    </div>
+  }
 </div>

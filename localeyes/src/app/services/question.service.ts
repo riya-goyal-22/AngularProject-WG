@@ -1,8 +1,9 @@
-import { inject, Injectable, signal } from "@angular/core";
-import { NewAnswer, NewQuestion, Question } from "../modals/modals";
+import { computed, inject, Injectable, Signal, signal } from "@angular/core";
+import { CustomResponse, NewAnswer, NewQuestion, Question } from "../modals/modals";
 import { HttpClient } from "@angular/common/http";
 import { PostService } from "./post.service";
-import { AddAnswer, AddQuestion } from "../constants/urls";
+import { AddAnswer, AddQuestion, GetPostQuestions } from "../constants/urls";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -10,21 +11,27 @@ import { AddAnswer, AddQuestion } from "../constants/urls";
 
 export class QuestionService {
   questions = signal<Question[] | null>(null);
-  activeQuestionId = signal<string>('');
+  answers:Signal<string[] | undefined> = computed(() => this.activeQuestion()?.replies)
+  activeQuestion = signal<Question|undefined>(undefined);
   isAddQuestion: boolean = false;
   isAddAnswer: boolean = false;
+  viewAnswers: boolean = false;
   httpClient = inject(HttpClient);
   postService = inject(PostService);
 
-  addQuestion(question: NewQuestion) {
-    return this.httpClient.post(AddQuestion(this.postService.activePostId()),question)
+  addQuestion(question: NewQuestion): Observable<CustomResponse>{
+    return this.httpClient.post<CustomResponse>(AddQuestion(this.postService.activePost()?.post_id as string),question)
   }
 
-  addAnswer(answer: NewAnswer) {
-    return this.httpClient.put(AddAnswer(this.postService.activePostId(),this.activeQuestionId()),answer)
+  addAnswer(answer: NewAnswer): Observable<CustomResponse> {
+    return this.httpClient.put<CustomResponse>(AddAnswer(this.postService.activePost()?.post_id as string,this.activeQuestion()?.question_id as string),answer)
   }
 
-  deleteQuestion() {
+  deleteQuestion(): Observable<CustomResponse> {
+    return this.httpClient.delete<CustomResponse>(AddAnswer(this.postService.activePost()?.post_id as string,this.activeQuestion()?.question_id as string))
+  }
 
+  getAllquestions(): Observable<CustomResponse> {
+    return this.httpClient.get<CustomResponse>(GetPostQuestions(this.postService.activePost()?.post_id as string))
   }
 }

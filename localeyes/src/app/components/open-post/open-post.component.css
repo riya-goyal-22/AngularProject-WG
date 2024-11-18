@@ -16,7 +16,7 @@
 .overlay-content {
   position: relative;
   width: 80%;
-  height: 50%;
+  height: 60%;
   max-width: 500px;
   padding: 20px;
   background-image: url(../../../assets/background.png);
@@ -26,6 +26,9 @@
   border-top-left-radius: 70px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #000000f1 #f1f1f102;
 }
 
 /* Close button */
@@ -64,15 +67,20 @@
 
 .content {
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-  text-align: center;
+  text-align: justify;
   background-color: rgba(249, 253, 249, 0.7);
   border-radius: 4px;
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 140px;
+  padding-inline: 10px;
 }
 
 .foot {
   position: absolute;
   bottom: 0;
   right: 0;
-  padding: 3%;
+  padding-top: 2%;
+  padding-inline: 2%;
   cursor: pointer;
 }

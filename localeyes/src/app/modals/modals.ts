@@ -7,6 +7,16 @@ export interface UserSignUp {
     months: Number;
     years: Number;
   }
+  security_answer: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  living_since: number;
+  city: string;
+  tag: string;
+  active_status: boolean;
 }
 
 export interface UserLogin {
@@ -28,11 +38,8 @@ export interface Post {
   content: string;
   likes: Number;
   created_at: string;
-  questions: [{
-    q_id: string,
-    question_text: string,
-    replies: string[]
-  }] | null
+  users: string[] | null;
+  questions: Question[]
 }
 
 export interface NewPost {
@@ -42,9 +49,12 @@ export interface NewPost {
 }
 
 export interface Question {
-    q_id: string,
-    question_text: string,
-    replies: string[]
+    question_id: string,
+    post_id?: string,
+    user_id?: string,
+    text: string,
+    replies: string[],
+    created_at?: string
 }
 
 export interface NewQuestion {
@@ -53,4 +63,15 @@ export interface NewQuestion {
 
 export interface NewAnswer {
   answer: string
+}
+
+export interface EditPost {
+  title: string,
+  content: string
+}
+
+export interface ResetPassword {
+  username: string,
+  new_password: string,
+  security_answer: string,
 }

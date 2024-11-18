@@ -6,14 +6,34 @@
 
 .text {
   text-align: justify;
-  margin-right: 10%;
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 100px;
+  padding: 10px;
+  margin: 10px;
+  width: 80%;
+}
+
+.text::-webkit-scrollbar {
+  display: none;  /* Hide the scrollbar */
 }
 
 .button {
-  color: rgba(245, 245, 245, 0.845);
+  color: rgba(113, 118, 63, 0.984);
   font-weight: 500;
   width: 100%;
-  margin: 0;
+  margin-inline: 8px;
+  background: none;
+  border: none;
+}
+
+.eye-btn {
+  color: rgba(45, 45, 40, 0.984);
+  font-weight: 500;
+  width: 100%;
+  margin-inline: 8px;
+  background: none;
+  border: none;
 }
 
 .btn {
@@ -22,8 +42,10 @@
 
 .trash-btn {
   color: rgb(188, 60, 60);
+  width: 100%;
   background: none;
   border: none;
+  margin-inline: 8px;
 }
 
 .answers button {
@@ -38,4 +60,8 @@
   align-items: center;
   justify-content: space-between;
   width: 80%;
+}
+
+:host::ng-deep .custom-dialog .p-dialog {
+  width: 500px !important;
 }

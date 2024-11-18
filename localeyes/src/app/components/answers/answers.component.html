@@ -1,0 +1,26 @@
+@if (questionService.viewAnswers){
+  <div class="overlay" (click)="closeOverlay()">
+    <div class="overlay-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeOverlay()">×</button>
+      <div class="container">
+        <div>
+          <h1>Answers</h1>
+        </div>
+        <div class="answers">
+          @for (answer of questionService.answers(); track $index) {
+            <div class="content">
+                <p>{{answer}}</p>
+            </div>
+          }
+          @if (questionService.answers()?.length == 0) {
+            <div class="no-content">
+              <p>No answers to display</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+

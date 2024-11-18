@@ -63,6 +63,12 @@ button {
   cursor: pointer;
 }
 
+.reset-link {
+  color: rgb(165, 71, 71);
+  font-weight: 500;
+  cursor: pointer;
+}
+
 .heading {
   color: rgb(57, 107, 57);
 }

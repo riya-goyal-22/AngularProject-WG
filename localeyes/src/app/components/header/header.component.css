@@ -1,5 +1,6 @@
 .profile {
-  width: 50px;
+  width: 100%;
+  cursor: pointer;
 }
 
 .logo {
@@ -24,24 +25,39 @@
   align-items: center;
 }
 
-.button {
+.right-margin {
+  margin-right: 4%;
+}
+
+:host ::ng-deep .p-button {
   color: black;
-  font-weight: 700;
-  margin-right: 2%;
+  background-color: none;
+  transition: background-color 0.3s ease;
+  border: none;
 }
 
-::ng-deep .custom-dropdown .p-dropdown {
-  width:100% !important;
-  border: none !important; /* Remove the border */
-  box-shadow: none !important; /* Remove shadow if present */
-  margin: 0 !important; 
-  padding: 0 !important; /* Remove any padding */
+:host ::ng-deep .logout .p-button {
+  background-color: transparent;
 }
 
-::ng-deep .custom-dropdown .p-dropdown-label {
-  padding: 0 !important; /* Remove padding for label */
-  margin: auto !important; /* Remove margin for label */
+:host ::ng-deep .p-button:hover {
+ background-color: transparent;
 }
+
+:host ::ng-deep .logout p-button :hover{
+  color: red;
+  border: none;
+}
+
+:host ::ng-deep .button .p-badge {
+  /* Custom badge styles */
+  background-color: #4f793b;
+  position: relative;
+  right:2px;
+  bottom: 8px;
+  z-index: 997;
+}
+
 
 
 

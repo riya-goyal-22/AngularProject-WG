@@ -4,7 +4,7 @@
     <div class="user-image">
       <img src="../../../assets/avatar.png" alt="avatar">
       <div>
-        <p>User Name</p>
+        <p>{{ userService.user()?.username }}</p>
       </div>
     </div>
     <div>
@@ -12,11 +12,13 @@
         pButton
         type="submit"
         label="Edit"
+        [routerLink]="['/profile/edit']"
       ></button>
       <button
         pButton
         type="submit"
         label="Deactivate"
+        (click)="deactivate()"
       ></button>
     </div>
   </div>
@@ -24,26 +26,35 @@
     <div class="field">
       <label>Username</label>
       <div class="content">
-        <p>name</p>
+        <p>{{userService.user()?.username}}</p>
       </div>
     </div>
     <div class="field">
       <label>Tag</label>
       <div class="content">
-        <p>tag</p>
+        <p>{{userService.user()?.tag}}</p>
       </div>
     </div>
     <div class="field">
       <label>City</label>
       <div class="content">
-        <p>Delhi</p>
+        <p>{{userService.user()?.city}}</p>
       </div>
     </div>
     <div class="field">
       <label>Dwelling Age</label>
       <div class="content">
-        <p>3</p>
+        <p>{{userService.user()?.living_since}}</p>
       </div>
     </div>
   </div>
 </div>
+<div class="heading">
+  <h1>
+    My Posts
+  </h1>
+</div>
+<app-posts [view]="'profile'" />
+@if (postService.isPostClicked()) {
+  <app-open-post/>
+}

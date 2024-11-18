@@ -46,17 +46,22 @@ button {
 }
 
 .content {
-  background: linear-gradient(rgb(143, 166, 133),rgb(174, 197, 166));
-  margin-top: 1%;
+  background: var(--gradientGreen);
   padding-left: 2%;
   padding-right: 2%;
-  padding-block: 0.002rem;
+  padding-block: 1px;
   border-radius: 50px;
   width: 30%;
 }
 
 .field {
-  margin-block: 1%;
+  margin-block: 0;
+}
+
+.heading {
+  text-align: center;
+  font-style: oblique;
+  color: var(--textGreen);
 }
 
 @media (max-width: 1000px) {

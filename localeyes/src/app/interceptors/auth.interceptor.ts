@@ -7,12 +7,11 @@ import { EMPTY, Observable } from "rxjs";
 
 export const AuthInterceptor: HttpInterceptorFn =
 (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
-    const skipUrls = ['/signup', '/login'];
+    const skipUrls = ['/signup', '/login', '/forgot-password', '/admin/login'];
     if(skipUrls.some(url => req.url.includes(url))) {
       return next(req);
     }
     const router = inject(Router)
-    console.log("request arrived");
     const token = localStorage.getItem('token')
     if (!token) {
       router.navigate(['/login'])

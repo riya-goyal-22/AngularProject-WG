@@ -2,33 +2,64 @@
   <img
     src="../../../assets/logo.png"
     alt="logo"
-    class="logo">
+    class="logo"
+    [routerLink]="'/home'"
+  >
   <div class="actions">
-    <p-button 
-      label="Post"
-      icon="pi pi-plus"
-      [text]="true"
-      [plain]="true"
-      [routerLink]="'/post-form'"
-      class="button"
-    />
-    <p-button 
-      icon="pi pi-bell" 
-      [text]="true"
-      [plain]="true"
-      class="button"
-      [routerLink]="['/notifications']"
-    />
+    @if (authService.isAdminLogin()) {
+      <div class="right-margin">
+        <p-button
+          label="Manage Posts"
+          [text]="true"
+          [plain]="true"
+          [rounded]="true"
+          (onClick)="managePosts()"
+        />
+      </div>
+      <div class="right-margin">
+        <p-button 
+          [label]="'Manage Users'"
+          [text]="true"
+          [plain]="true"
+          [rounded]="true"
+          class="button"
+          (onClick)="manageUsers()"
+        />
+      </div>
+    }@else {
+      <div class="right-margin">
+        <p-button
+          label="Post"
+          icon="pi pi-plus"
+          [text]="true"
+          [routerLink]="'/post/add'"
+        />
+      </div>
+      <div class="right-margin">
+        <p-button 
+          icon="pi pi-bell" 
+          [badge]="badgeNumber()"
+          badgeClass="p-badge-danger"
+          [text]="true"
+          class="button"
+          [routerLink]="['/notifications']"
+        />
+      </div>
+    }
+    <div class="right-margin logout">
+      <p-button
+        label="Logout"
+        icon="pi pi-sign-out"
+        (onClick)="logout()"
+      />
+    </div>
+    <div>
       <img 
         src="../../../assets/avatar.png"
-        alt="avatar" class="profile">
-
-        <!-- <p-dropdown 
-          [options]="options"
-          appendTo="body" 
-          [(ngModel)]="selectedOption"
-          class="custom-dropdown">
-        </p-dropdown> -->
-
+        alt="avatar"
+        class="profile"
+        [routerLink]="['/profile']"
+      >
+    </div>
   </div>
 </div>

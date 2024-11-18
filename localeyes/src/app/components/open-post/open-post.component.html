@@ -5,17 +5,17 @@
       <div class="head">
         <div id="user">
           <img src="../../../assets/avatar.png" alt="avatar">
-          <p>Username</p>
+          <p>{{service.activePostMaker()}}</p>
         </div>
       </div>
       <div class="sub-head">
-        <p>Listen what user thinks about this place 😁</p>
+        <p>See what {{service.activePostMaker()}} thinks about this place 😁</p>
       </div>
       <div class="content">
         <p>{{post.content}}</p>
       </div>
       <div class="foot" (click)="openQuestions()" >
-        <p>Ask Question 🙋🏻‍♂️</p>
+        <p>Questions 🙋🏻‍♂️</p>
       </div>
     </div>
   </div>

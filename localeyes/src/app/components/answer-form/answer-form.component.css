@@ -18,7 +18,12 @@ button {
   border-color: rgb(75, 71, 71);
   width: 100%;
   max-width: 100%;
-  overflow-y: hidden;
+  max-height: 100px;
+  overflow-y: scroll;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
 }
 
 .button-link {

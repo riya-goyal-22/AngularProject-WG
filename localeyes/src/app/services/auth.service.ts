@@ -1,11 +1,11 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { inject, Injectable, signal, WritableSignal } from "@angular/core";
 
-import { catchError, Observable, throwError } from "rxjs";
+import { Observable } from "rxjs";
 
-import { UserLogin, UserSignUp } from "../modals/modals";
+import { ResetPassword, UserLogin, UserSignUp } from "../modals/modals";
 import { CustomResponse } from "../modals/modals";
-import { Login, SignUp } from "../constants/urls";
+import { ForgetPassword, Login, SignUp } from "../constants/urls";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,8 @@ import { Login, SignUp } from "../constants/urls";
 export class AuthService {
   httpClient = inject(HttpClient);
   token?:string;
-
+  isAdminLogin: WritableSignal<boolean> = signal<boolean>(false);
+  isUserLogin: WritableSignal<boolean> = signal<boolean>(false);
 
   signup(user: UserSignUp): Observable<CustomResponse> {
     return this.httpClient
@@ -26,5 +27,10 @@ export class AuthService {
     .post<CustomResponse>(Login,user,{
       observe: 'response'
     })
+  }
+
+  resetPassword(user: ResetPassword): Observable<CustomResponse> {
+    return this.httpClient
+    .post<CustomResponse>(ForgetPassword,user)
   }
 }

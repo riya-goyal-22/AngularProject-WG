@@ -1,0 +1,31 @@
+<div
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="500"
+  (scrolled)="scroll()"
+>
+  <app-header/>
+  <div class="heading">
+    <h1>
+      Users
+    </h1>
+  </div>
+  <div class="search-bar">
+    <form [formGroup]="searchForm">
+      <p-floatLabel>
+        <input 
+          id="search"
+          type="text"
+          formControlName="searchControl"
+          pInputText
+        />
+        <label for="search">🔍Search</label>
+      </p-floatLabel>
+    </form>
+  </div>
+  <div class="notifications">
+    @for (user of this.users(); track $index) {
+     <app-user [user]="user"/>
+    }
+  </div>
+</div>

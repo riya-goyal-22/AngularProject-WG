@@ -1,25 +1,3 @@
-.middle-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 2%;
-  padding-right: 2%;
-}
-
-h1 {
-  color: rgb(57, 107, 57);
-  font-size: 3rem;
-}
-
-.toggle {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2rem;
-}
-
-
 .posts {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -30,14 +8,6 @@ h1 {
 
 .post {
   margin: 2%;
-}
-
-::ng-deep .toggle-btn {
-  border: none !important;
-}
-
-::ng-deep .p-selectbutton .p-highlight {
-  background-color: rgb(57, 107, 57) !important;
 }
 
 @media(max-width: 1200px) {

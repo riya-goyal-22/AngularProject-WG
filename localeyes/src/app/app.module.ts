@@ -15,8 +15,15 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from "primeng/inputtext";
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { SelectButtonModule } from 'primeng/selectbutton';
 import { DialogModule } from 'primeng/dialog';
+import { MenuModule } from 'primeng/menu';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageService } from "primeng/api";
+import { TooltipModule } from 'primeng/tooltip';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { BadgeModule } from 'primeng/badge';
 
 import { AppComponent } from "./app.component";
 import { appConfig } from "./app.config";
@@ -25,16 +32,23 @@ import { LoginComponent } from "./components/login/login.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { PostComponent } from "./components/post/post.component";
 import { PostFormComponent } from "./components/post-form/post-form.component";
-import { PostsComponent } from "./components/posts/posts.component";
 import { AuthInterceptor } from "./interceptors/auth.interceptor";
 import { NotificationsComponent } from "./components/notifications/notifications.component";
-import { MyPostsComponent } from "./components/my-posts/my-posts.component";
 import { ProfileComponent } from "./components/profile/profile.component";
 import { OpenPostComponent } from "./components/open-post/open-post.component";
 import { QuestionFormComponent } from "./components/question-form/question-form.component";
 import { AnswerFormComponent } from "./components/answer-form/answer-form.component";
 import { QuestionsComponent } from "./components/questions/questions.component";
 import { QuestionComponent } from "./components/question/question.component";
+import { EditPostDirective } from "./directives/edit-post.directive";
+import { HomeComponent } from "./components/home/home.component";
+import { PostsComponent } from "./components/posts/posts.component";
+import { AnswersComponent } from "./components/answers/answers.component";
+import { ResetPasswordFormComponent } from "./components/reset-password-form/reset-password-form.component";
+import { ManagePostsComponent } from "./components/manage-posts/manage-posts.component";
+import { ManageUsersComponent } from "./components/manage-users/manage-users.component";
+import { UserComponent } from "./components/user/user.component";
+import { LoaderComponent } from "./components/loader/loader.component";
 
 @NgModule({
   declarations: [
@@ -44,15 +58,21 @@ import { QuestionComponent } from "./components/question/question.component";
     HeaderComponent,
     PostComponent,
     PostFormComponent,
-    PostsComponent,
     NotificationsComponent,
-    MyPostsComponent,
     ProfileComponent,
     OpenPostComponent,
     QuestionFormComponent,
     AnswerFormComponent,
     QuestionsComponent,
-    QuestionComponent
+    QuestionComponent,
+    HomeComponent,
+    PostsComponent,
+    AnswersComponent,
+    ResetPasswordFormComponent,
+    ManagePostsComponent,
+    ManageUsersComponent,
+    UserComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -72,12 +92,20 @@ import { QuestionComponent } from "./components/question/question.component";
     DropdownModule,
     InputTextModule,
     ToggleButtonModule,
-    SelectButtonModule,
-    DialogModule
+    DialogModule,
+    MenuModule,
+    EditPostDirective,
+    ConfirmDialogModule,
+    ToastModule,
+    ProgressSpinnerModule,
+    TooltipModule,
+    InfiniteScrollModule,
+    BadgeModule
 ],
   providers: [
     appConfig.providers,
-    provideHttpClient(withInterceptors([AuthInterceptor]))
+    provideHttpClient(withInterceptors([AuthInterceptor])),
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,9 @@
 body {
   font-family: Arial, sans-serif;
-  background-image: url(../../../assets/background.png);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
 }
 
 .error-message {

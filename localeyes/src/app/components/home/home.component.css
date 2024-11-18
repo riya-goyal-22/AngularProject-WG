@@ -1,0 +1,72 @@
+.middle-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 100%;
+}
+
+input {
+  width: 400px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+h1 {
+  color: rgb(57, 107, 57);
+  font-size: 3rem;
+}
+
+.toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 2%;
+}
+
+.post {
+  margin: 2%;
+}
+
+::ng-deep .toggle-btn {
+  border: none !important;
+}
+
+::ng-deep .p-selectbutton .p-highlight {
+  background-color: rgb(57, 107, 57) !important;
+}
+
+.logout {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2%;
+}
+
+.logout button {
+  background-color: red;
+  border: none;
+}
+
+::ng-deep .custom-dropdown {
+  width: 200px !important
+}

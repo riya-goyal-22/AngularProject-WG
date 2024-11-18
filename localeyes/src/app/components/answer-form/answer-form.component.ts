@@ -1,15 +1,25 @@
 import { Component, inject, output } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { MessageService } from 'primeng/api';
+
+import { QuestionService } from '../../services/question.service';
+import { NewAnswer } from '../../modals/modals';
 
 @Component({
   selector: 'app-answer-form',
   templateUrl: './answer-form.component.html',
   styleUrl: './answer-form.component.css'
 })
+
 export class AnswerFormComponent {
-  service = inject(AuthService);
-  close = output<void>();
+  questionService = inject(QuestionService);
+  messageService = inject(MessageService);
+  router = inject(Router);
+  answer: NewAnswer = {
+    answer: ''
+  };
 
   form: FormGroup = new FormGroup({
     answer: new FormControl('',[Validators.required]),
@@ -17,7 +27,23 @@ export class AnswerFormComponent {
 
   Add() {
     if (this.form.valid) {
-      
+      this.answer.answer = this.form.controls['answer'].value;
+      this.questionService.addAnswer(this.answer).subscribe({
+        next: () => {
+          this.form.reset();
+          this.messageService.add({
+            severity:'success',
+            summary: 'Success',
+            detail: 'Successfully added answer'
+          })
+          this.questionService.questions()?.map((question) => {
+            if (this.questionService.activeQuestion()?.question_id == question.question_id) {
+              question.replies.push(this.answer.answer)
+            }
+          })
+        }
+      })
+      this.questionService.isAddAnswer = false;
     }
   }
 }

@@ -1,6 +1,11 @@
 import { Component, inject, input } from '@angular/core';
+
+import { MessageService } from 'primeng/api';
+
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../modals/modals';
+import { AdminService } from '../../services/admin.service';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-question',
@@ -9,10 +14,60 @@ import { Question } from '../../modals/modals';
 })
 export class QuestionComponent {
   service = inject(QuestionService);
+  messageService = inject(MessageService);
   question = input.required<Question>();
+  postService = inject(PostService);
+  adminService = inject(AdminService);
+
+  ngOnInit() {
+    this.service.activeQuestion.set(this.question());
+  }
 
   showAnswerForm() {
-    this.service.activeQuestionId.set(this.question().q_id);
     this.service.isAddAnswer = true;
+  }
+
+  showAnswers() {
+    this.service.viewAnswers = true;
+  }
+
+  delete() {
+    this.service.deleteQuestion().subscribe({
+      next: () => {
+        this.messageService.add({
+          severity:'success',
+          detail: 'Successful deletion'
+        })
+        this.service.questions.update(current => current!.filter((que) => {
+          return que.question_id!=this.question().question_id
+        }))
+      },
+      error: () => {
+        this.messageService.add({
+          severity:'error',
+          detail: 'Some issue at our end'
+        })
+      }
+    })
+  }
+
+  deleteByAdmin() {
+    this.adminService.deleteQuestion().subscribe({
+      next: () => {
+        this.messageService.add({
+          severity:'success',
+          detail: 'Successful deletion'
+        })
+        this.service.questions.update(current => current!.filter((que) => {
+          return que.question_id!=this.question().question_id
+        }))
+      },
+      error: () => {
+        this.messageService.add({
+          severity:'error',
+          detail: 'Some issue at our end'
+        })
+      }
+    })
   }
 }
