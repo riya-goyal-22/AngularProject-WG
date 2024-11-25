@@ -7,5 +7,5 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 export class DataService {
   loadingSubject = new BehaviorSubject<boolean>(false);
-  loader$ = this.loadingSubject as Observable<boolean>
+  loader$ = this.loadingSubject as Observable<boolean>;
 }

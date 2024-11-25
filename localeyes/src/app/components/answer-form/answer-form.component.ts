@@ -9,6 +9,7 @@ import { NewAnswer } from '../../modals/modals';
 
 @Component({
   selector: 'app-answer-form',
+  standalone: false,
   templateUrl: './answer-form.component.html',
   styleUrl: './answer-form.component.css'
 })
@@ -40,6 +41,7 @@ export class AnswerFormComponent {
             if (this.questionService.activeQuestion()?.question_id == question.question_id) {
               question.replies.push(this.answer.answer)
             }
+            return question
           })
         }
       })

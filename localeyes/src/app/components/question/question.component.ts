@@ -21,17 +21,21 @@ export class QuestionComponent {
 
   ngOnInit() {
     this.service.activeQuestion.set(this.question());
+    console.log(this.service.activeQuestion())
   }
 
   showAnswerForm() {
+    this.service.activeQuestion.set(this.question());
     this.service.isAddAnswer = true;
   }
 
   showAnswers() {
+    this.service.activeQuestion.set(this.question());
     this.service.viewAnswers = true;
   }
 
   delete() {
+    this.service.activeQuestion.set(this.question());
     this.service.deleteQuestion().subscribe({
       next: () => {
         this.messageService.add({
@@ -52,6 +56,7 @@ export class QuestionComponent {
   }
 
   deleteByAdmin() {
+    this.service.activeQuestion.set(this.question());
     this.adminService.deleteQuestion().subscribe({
       next: () => {
         this.messageService.add({

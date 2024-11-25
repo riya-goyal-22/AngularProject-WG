@@ -14,6 +14,7 @@ import { InvalidCredentials } from '../../constants/errors';
 
 @Component({
   selector: 'app-signup',
+  standalone: false,
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })

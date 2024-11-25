@@ -9,17 +9,17 @@ import { PostService } from '../../services/post.service';
   styleUrl: './questions.component.css'
 })
 export class QuestionsComponent {
-  service = inject(QuestionService);
-  questions = computed(() => this.service.questions());
+  questionService = inject(QuestionService);
+  questions = computed(() => this.questionService.questions());
   postService = inject(PostService);
 
   showQuestionForm() {
-    this.service.isAddQuestion = true;
+    this.questionService.isAddQuestion = true;
   }
 
 
   closeOverlay() {
-    this.service.isAddAnswer = false;
-    this.service.isAddQuestion = false;
+    this.questionService.isAddAnswer = false;
+    this.questionService.isAddQuestion = false;
   }
 }

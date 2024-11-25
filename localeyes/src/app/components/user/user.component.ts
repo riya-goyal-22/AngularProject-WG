@@ -7,6 +7,7 @@ import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-user',
+  standalone: false,
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

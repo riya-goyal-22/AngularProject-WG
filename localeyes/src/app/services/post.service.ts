@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { Post, CustomResponse, NewPost, EditPost } from "../modals/modals";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { CreatePost, DislikePost, GetAllPosts, GetPostById, GetUserPosts, LikePost, UserPostEditing } from "../constants/urls";
-import { EMPTY, Observable } from "rxjs";
+import { EMPTY, Observable, throwError } from "rxjs";
 import { AuthService } from "./auth.service";
 import { FoodFilter, QueryParams, ShoppingFilter, TravelFilter } from "../constants/constants";
 import { DataService } from "./data.service";
@@ -52,6 +52,9 @@ export class PostService {
   }
 
   getPostById(): Observable<CustomResponse> {
+    if(!this.activePost()) {
+      return throwError(() => new Error('No Post Selected'))
+    }
     return this.httpClient.get<CustomResponse>(GetPostById(this.activePost()?.post_id as string))
   }
 

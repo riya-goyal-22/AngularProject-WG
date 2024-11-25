@@ -6,6 +6,7 @@ import { DataService } from '../../services/data.service';
 import { CustomResponse } from '../../modals/modals';
 import { PostService } from '../../services/post.service';
 import { UserService } from '../../services/user.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,8 @@ export class HeaderComponent {
   dataService = inject(DataService);
   postService = inject(PostService);
   userService = inject(UserService);
+  messageService = inject(MessageService);
+  confirmationService = inject(ConfirmationService);
   router = inject(Router);
   badgeNumber:Signal<string> = computed(() => String(this.userService.userNotifications().length));
 
@@ -31,8 +34,21 @@ export class HeaderComponent {
   }
 
   logout() {
-    localStorage.clear();
-    this.router.navigate(['/login'])
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to proceed?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon:"None",
+      rejectIcon:"None",
+      rejectButtonStyleClass:"p-button-text",
+      accept: () => {
+        localStorage.clear();
+        this.router.navigate(['/login']);
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected to logout', life: 3000 });
+      }
+    });
   }
 
   manageUsers() {

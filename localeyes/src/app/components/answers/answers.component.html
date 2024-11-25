@@ -7,12 +7,12 @@
           <h1>Answers</h1>
         </div>
         <div class="answers">
-          @for (answer of questionService.answers(); track $index) {
+          @for (answer of answers(); track $index) {
             <div class="content">
                 <p>{{answer}}</p>
             </div>
           }
-          @if (questionService.answers()?.length == 0) {
+          @if (answers()?.length == 0) {
             <div class="no-content">
               <p>No answers to display</p>
             </div>

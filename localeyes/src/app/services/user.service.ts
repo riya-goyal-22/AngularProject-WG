@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { Deactivate, GetUserById, GetUserNotifications, GetUserProfile } from "../constants/urls";
 import { CustomResponse, User, UserSignUp } from "../modals/modals";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 
 @Injectable ({
   providedIn: 'root'
@@ -22,6 +22,9 @@ export class UserService {
   }
 
   edit(user: UserSignUp): Observable<CustomResponse> {
+    if(!this.user()) {
+      return throwError(() => new Error('No user selected'))
+    }
     return this.httpClient.put<CustomResponse>(GetUserById(this.user()?.id as string),user)
   }
 

@@ -20,7 +20,7 @@ import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { TooltipModule } from 'primeng/tooltip';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { BadgeModule } from 'primeng/badge';
@@ -45,10 +45,10 @@ import { HomeComponent } from "./components/home/home.component";
 import { PostsComponent } from "./components/posts/posts.component";
 import { AnswersComponent } from "./components/answers/answers.component";
 import { ResetPasswordFormComponent } from "./components/reset-password-form/reset-password-form.component";
-import { ManagePostsComponent } from "./components/manage-posts/manage-posts.component";
 import { ManageUsersComponent } from "./components/manage-users/manage-users.component";
 import { UserComponent } from "./components/user/user.component";
 import { LoaderComponent } from "./components/loader/loader.component";
+import { AccessInterceptor } from "./interceptors/access.interceptor";
 
 @NgModule({
   declarations: [
@@ -69,7 +69,6 @@ import { LoaderComponent } from "./components/loader/loader.component";
     PostsComponent,
     AnswersComponent,
     ResetPasswordFormComponent,
-    ManagePostsComponent,
     ManageUsersComponent,
     UserComponent,
     LoaderComponent
@@ -104,8 +103,9 @@ import { LoaderComponent } from "./components/loader/loader.component";
 ],
   providers: [
     appConfig.providers,
-    provideHttpClient(withInterceptors([AuthInterceptor])),
-    MessageService
+    provideHttpClient(withInterceptors([AuthInterceptor, AccessInterceptor])),
+    MessageService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

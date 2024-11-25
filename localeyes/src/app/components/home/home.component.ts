@@ -8,7 +8,7 @@ import { Filters } from '../../constants/constants';
 import { UserService } from '../../services/user.service';
 import { InvalidToken } from '../../constants/errors';
 import { DataService } from '../../services/data.service';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -36,14 +36,18 @@ export class HomeComponent implements OnInit {
       localStorage.removeItem('token');
     },3600000);
 
-    this.setupSearchDebounce();
-
     this.userService.profile().subscribe({
       next: (response: CustomResponse) => {
         this.userService.user.set(response.data as User);
         this.loadPosts("");
       }
     })
+    this.setupSearchDebounce();
+    if (this.router.url.includes('manage-posts')) {
+      if(!localStorage.getItem('role')){
+        this.router.navigate(['/login'])
+      }
+    }
   }
 
   setupSearchDebounce() {
@@ -139,7 +143,6 @@ export class HomeComponent implements OnInit {
   }
 
   scroll() {
-    console.log('scrolled');
     this.dataService.loadingSubject.next(true);
     this.postService.offset += this.postService.itemsPerPage;
     this.appendData();
@@ -167,6 +170,12 @@ export class HomeComponent implements OnInit {
           this.loadPosts(searchTerm)
         }
       })
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.router.url.includes('manage-posts')) {
+      this.postService.isDisplayingAdmin.set(false);
     }
   }
 }

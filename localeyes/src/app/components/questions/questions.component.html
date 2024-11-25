@@ -20,7 +20,7 @@
         <button pButton (click)="showQuestionForm()" label="Add Question"></button>
         <p-dialog
           header="Question Form"
-          [(visible)]="service.isAddQuestion"
+          [(visible)]="questionService.isAddQuestion"
           [modal]="true"
           class="custom-dialog"
         >

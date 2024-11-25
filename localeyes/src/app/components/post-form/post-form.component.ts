@@ -29,7 +29,7 @@ export class PostFormComponent {
   }
 
   ngOnInit() {
-    if(this.router.url.includes("post/edit")) {
+    if(this.router.url.includes("profile/edit-post")) {
       this.isEdit = true;
       this.form.get('title')?.setValue(this.service.activePost()?.title as string);
       this.form.get('content')?.setValue(this.service.activePost()?.content as string);

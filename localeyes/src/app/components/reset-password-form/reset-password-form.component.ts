@@ -10,6 +10,7 @@ import { passwordStrengthValidator } from '../../validators/password.validator';
 
 @Component({
   selector: 'app-reset-password-form',
+  standalone: false,
   templateUrl: './reset-password-form.component.html',
   styleUrl: './reset-password-form.component.css'
 })
@@ -37,7 +38,7 @@ export class ResetPasswordFormComponent {
       this.service.resetPassword(this.user).subscribe({
         next: () => {
           this.form.reset();
-          this.router.navigate(['/login'])
+          this.router.navigate(['/login']);
           this.messageService.add({
             severity: 'success',
             summary: 'Success',

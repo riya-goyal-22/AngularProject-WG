@@ -1,7 +1,7 @@
-import { Component, computed, DoCheck, inject, input, OnChanges, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, input, OnChanges, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
 
 import { Post, User } from '../../modals/modals';
 import { PostService } from '../../services/post.service';
@@ -15,10 +15,12 @@ import { AdminService } from '../../services/admin.service';
 })
 export class PostComponent implements OnInit {
   messageService = inject(MessageService);
-  service = inject(PostService);
+  postService = inject(PostService);
   userService = inject(UserService);
   router = inject(Router);
   adminService = inject(AdminService);
+  confirmService = inject(ConfirmationService);
+
 
   post = input.required<Post>();
   isHighlight: WritableSignal<boolean> = signal(false);
@@ -31,7 +33,7 @@ export class PostComponent implements OnInit {
     living_since: 0,
     active_status: false
   }
-
+  
   ngOnChanges(){
     this.isHighlight.set(false);
     if(this.post().users?.includes(this.userService.user()?.id as string)) {
@@ -52,41 +54,54 @@ export class PostComponent implements OnInit {
               {
                   label: 'Edit',
                   icon: 'pi pi-pencil',
-                  command: () => {
-                    this.service.activePost.set(this.post());
-                    this.router.navigate(['/post/edit'])
+                  command: (event: MenuItemCommandEvent) => {
+                    this.postService.activePost.set(this.post());
+                    this.router.navigate(['/profile/edit-post'])
                   }
               },
               {
                   label: 'Delete',
                   icon: 'pi pi-trash',
-                  command: () => {
-                    this.service.activePost.set(this.post());
-                    this.service.deletePost().subscribe({
-                      next: () => {
-                        this.messageService.add({
-                          severity: 'success',
-                          summary: 'Success',
-                          detail: 'Successfully deleted'
-                        });
-                        this.service.userPosts.update(current => current.filter((post) => {
-                          return post.post_id !=this.service.activePost()?.post_id
-                        }))
+                  command: (event: MenuItemCommandEvent) => {
+                    this.postService.activePost.set(this.post());
+                    this.confirmService.confirm({
+                      message: 'Are you sure that you want to proceed?',
+                      header: 'Confirmation',
+                      icon: 'pi pi-exclamation-triangle',
+                      acceptIcon:"none",
+                      rejectIcon:"none",
+                      rejectButtonStyleClass:"p-button-text",
+                      accept: () => {
+                        this.postService.deletePost().subscribe({
+                          next: () => {
+                            this.messageService.add({
+                              severity: 'success',
+                              summary: 'Success',
+                              detail: 'Successfully deleted'
+                            });
+                            this.postService.userPosts.update(current => current.filter((post) => {
+                              return post.post_id !=this.postService.activePost()?.post_id
+                            }))
+                          }
+                        })
+                      },
+                      reject: () => {
+                        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected to delete', life: 3000 });
                       }
-                    })
-                  }
+                  });
+                }
               }
           ],
       }
   ];
   }
 
-  like() {
+  toggleLike() {
     if (this.isHighlight()){
-      this.service.DislikePost(this.post().post_id).subscribe({
+      this.postService.DislikePost(this.post().post_id).subscribe({
         next: () => {
-          if(this.service.isDisplayingProfile()){
-            this.service.userPosts.update((posts) => 
+          if(this.postService.isDisplayingProfile()){
+            this.postService.userPosts.update((posts) => 
               posts.map((post) => 
                 post.post_id === this.post().post_id ?
                 { ...post, likes: Number(post.likes)-1, users: post.users!.filter((user_id) => 
@@ -94,7 +109,7 @@ export class PostComponent implements OnInit {
               )
             )
           }else {
-            this.service.posts.update((posts) => 
+            this.postService.posts.update((posts) => 
               posts.map((post) => 
                 post.post_id === this.post().post_id ?
                 { ...post, likes: Number(post.likes)-1, users: post.users!.filter((user_id) => 
@@ -106,10 +121,10 @@ export class PostComponent implements OnInit {
         }
       });
     } else {
-      this.service.LikePost(this.post().post_id).subscribe({
+      this.postService.LikePost(this.post().post_id).subscribe({
         next: () => {
-          if(this.service.isDisplayingProfile()){
-            this.service.userPosts.update((posts) => 
+          if(this.postService.isDisplayingProfile()){
+            this.postService.userPosts.update((posts) => 
               posts.map((post) => 
                 post.post_id === this.post().post_id ?
                 { ...post, likes: Number(post.likes)+1, users: post.users?.includes(this.userService.user()?.id as string) ? post.users 
@@ -117,7 +132,7 @@ export class PostComponent implements OnInit {
               )
             )
           }else {
-            this.service.posts.update((posts) => 
+            this.postService.posts.update((posts) => 
               posts.map((post) => 
                 post.post_id === this.post().post_id ?
                 { ...post, likes: Number(post.likes)+1, users: post.users?.includes(this.userService.user()?.id as string) ? post.users 
@@ -132,13 +147,13 @@ export class PostComponent implements OnInit {
   }
 
   openPost() {
-    this.service.activePost.set(this.post());
-    this.service.activePostMaker.set(this.postMaker.username);
-    this.service.isPostClicked.set(true);
+    this.postService.activePost.set(this.post());
+    this.postService.activePostMaker.set(this.postMaker.username);
+    this.postService.isPostClicked.set(true);
   }
 
   deletePost() {
-    this.service.activePost.set(this.post());
+    this.postService.activePost.set(this.post());
       this.adminService.deletePost().subscribe({
         next: () => {
           this.messageService.add({
@@ -146,8 +161,8 @@ export class PostComponent implements OnInit {
             summary: 'Success',
             detail: 'Successfully deleted'
           });
-          this.service.posts.update(current => current.filter((post) => {
-            return post.post_id !=this.service.activePost()?.post_id
+          this.postService.posts.update(current => current.filter((post) => {
+            return post.post_id !=this.postService.activePost()?.post_id
           }))
         }
       })

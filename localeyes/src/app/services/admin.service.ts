@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { CustomResponse, User, UserLogin } from "../modals/modals";
 import { HttpClient } from "@angular/common/http";
 import { DeletePostByAdmin, DeleteQuestionByAdmin, DeleteUser, GetAllUsers, Login, ReactivateUser } from "../constants/urls";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { PostService } from "./post.service";
 import { QuestionService } from "./question.service";
 import { QueryParams } from "../constants/constants";
@@ -33,6 +33,9 @@ export class AdminService {
   }
 
   deleteUser(): Observable<CustomResponse> {
+    if (!this.user()) {
+      return throwError(() => new Error('No user selected'));
+    }
     return this.httpClient
     .delete<CustomResponse>(
       DeleteUser(this.user()?.id as string)

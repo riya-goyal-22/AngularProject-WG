@@ -13,7 +13,6 @@ export class LoaderComponent {
   dataService = inject(DataService);
 
   ngOnInit() {
-    console.log("loader initialized")
     this.subscription = this.dataService.loader$.subscribe(
       (value: boolean) => {
         this.isLoading = value
@@ -22,7 +21,6 @@ export class LoaderComponent {
   }
 
   ngOnDestroy() {
-    console.log("loader completed")
     if(this.subscription) {
       this.subscription.unsubscribe();
     }

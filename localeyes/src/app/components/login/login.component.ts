@@ -73,11 +73,11 @@ export class LoginComponent {
       } else {
         this.dataService.loadingSubject.next(true);
         this.service.login(this.userLogin).subscribe({
-          next: (response: HttpResponse<CustomResponse>) => {
+          next: (response: CustomResponse) => {
             this.service.isUserLogin.set(true)
-            this.service.token = response.body?.data;
-            if (this.service.token) {
-              localStorage.setItem('token', this.service.token)
+            // this.service.token = response.body?.data;
+            if (response.data) {
+              localStorage.setItem('token', response.data)
             }
             this.form.reset();
             this.router.navigate(['/home']);

@@ -11,7 +11,7 @@
         <span>{{postMaker.username}}</span>
       </div>
     </div>
-    <div *appEditPost="service.isDisplayingProfile()">
+    <div *appEditPost="postService.isDisplayingProfile()">
       <p-menu #menu [model]="items" [popup]="true"></p-menu>
         <p-button
           class="menu-btn"
@@ -19,7 +19,7 @@
           icon="pi pi-ellipsis-v"
         ></p-button>
     </div>
-    @if (service.isDisplayingAdmin()) {
+    @if (postService.isDisplayingAdmin()) {
       <div>
         <p-button
           class="menu-btn"
@@ -69,7 +69,7 @@
     <div class="likes">
       @if (isHighlight()) {
         <i 
-          (click)="like()"
+          (click)="toggleLike()"
           class="pi pi-heart-fill"
           style="
             font-size: 1rem;
@@ -79,7 +79,7 @@
         ></i>
       }@else {
         <i 
-          (click)="like()"
+          (click)="toggleLike()"
           class="pi pi-heart"
           style="
             font-size: 1rem;
@@ -88,19 +88,5 @@
             margin-right: 10%;"
         ></i>
       }
-      <!-- <i
-  (click)="!isProcessing() && like()"
-  class="pi"
-  [class.pi-heart-fill]="isHighlight()"
-  [class.pi-heart]="!isHighlight()"
-  [ngStyle]="{
-    'font-size': '1rem',
-    'color': isHighlight() ? 'rgb(220, 63, 63)' : 'rgb(11, 11, 11)',
-    'margin-left': '1%',
-    'margin-right': '10%',
-    'opacity': isProcessing() ? '0.5' : '1',
-    'cursor': isProcessing() ? 'default' : 'pointer'
-  }"
-></i> -->
       <span>{{post().likes}}</span>
 </div>

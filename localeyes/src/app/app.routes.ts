@@ -8,7 +8,6 @@ import { QuestionsComponent } from './components/questions/questions.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResetPasswordFormComponent } from './components/reset-password-form/reset-password-form.component';
 import { ManageUsersComponent } from './components/manage-users/manage-users.component';
-import { ManagePostsComponent } from './components/manage-posts/manage-posts.component';
 
 export const routes: Routes = [
   {
@@ -29,7 +28,7 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'post/add',
+    path: 'home/new-post',
     component: PostFormComponent
   },
   {
@@ -45,7 +44,7 @@ export const routes: Routes = [
     component: QuestionsComponent
   },
   {
-    path: 'post/edit',
+    path: 'profile/edit-post',
     component: PostFormComponent
   },
   {
@@ -62,6 +61,6 @@ export const routes: Routes = [
   },
   {
     path: 'admin/manage-posts',
-    component: ManagePostsComponent
+    component: HomeComponent
   }
 ];

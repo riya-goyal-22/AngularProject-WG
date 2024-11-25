@@ -1,7 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 
 import { PostService } from '../../services/post.service';
-import { Post } from '../../modals/modals';
 
 @Component({
   selector: 'app-posts',

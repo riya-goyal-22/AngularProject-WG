@@ -22,11 +22,9 @@ export class AuthService {
     .post<CustomResponse>(SignUp,user)
   }
 
-  login(user: UserLogin): Observable<HttpResponse<CustomResponse>> {
+  login(user: UserLogin): Observable<CustomResponse> {
     return this.httpClient
-    .post<CustomResponse>(Login,user,{
-      observe: 'response'
-    })
+    .post<CustomResponse>(Login,user)
   }
 
   resetPassword(user: ResetPassword): Observable<CustomResponse> {

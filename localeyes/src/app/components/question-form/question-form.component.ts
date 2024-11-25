@@ -41,6 +41,12 @@ export class QuestionFormComponent {
           this.questionService.getAllquestions().subscribe({
             next: (response: CustomResponse) => {
               this.questionService.questions.set(response.data)
+            },
+            error: () => {
+              this.messageService.add({
+                severity: 'error',
+                detail: 'Error updating questions please reload'
+              })
             }
           })
           this.postService.isPostClicked.set(false);
