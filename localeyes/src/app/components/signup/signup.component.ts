@@ -9,7 +9,7 @@ import { UserLogin, UserSignUp } from '../../modals/modals';
 import { AuthService } from '../../services/auth.service';
 import { passwordStrengthValidator } from '../../validators/password.validator';
 import { UserService } from '../../services/user.service';
-import { InvalidCredentials } from '../../constants/errors';
+import { InvalidCredentials, InvalidEmail } from '../../constants/errors';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class SignupComponent {
       months: 0,
       days: 0,
     },
-    security_answer: ''
+    email: ''
   }
   userLogin: UserLogin = {
     username: '',
@@ -40,6 +40,7 @@ export class SignupComponent {
   messageService = inject(MessageService);
 
   usernameNotAvailable:Boolean = false;
+  emailNotAvailable:Boolean = false;
   isEditMode: boolean = false;
 
   form: FormGroup = new FormGroup({
@@ -52,7 +53,7 @@ export class SignupComponent {
       months: new FormControl('',[Validators.required, Validators.min(0), Validators.max(11)]),
       days: new FormControl('',[Validators.required, Validators.min(0), Validators.max(30)])
     }),
-    securityAnswer: new FormControl('',[Validators.required])
+    email: new FormControl('',[Validators.required,Validators.email])
   });
 
   ngOnInit() {
@@ -62,29 +63,27 @@ export class SignupComponent {
       this.form.get('duration.years')?.setValue(this.userService.user()?.living_since);
       this.form.get('duration.days')?.setValue(0);
       this.form.get('duration.months')?.setValue(0);
-      this.form.controls['securityAnswer'].disable();
+      this.form.get('username')?.setValue(this.userService.user()?.username);
       this.form.controls['username'].disable();
+      this.form.get('email')?.setValue(this.userService.user()?.email)
+      this.form.controls['email'].disable();
     }
   }
 
   submit() {
-    console.log("singup entered")
-    console.log(this.form)
     if (
-      this.form.get('username')?.valid 
-      && this.form.get('newPassword')?.valid
-      && this.form.get('securityAnswer')?.valid
+      this.form.get('newPassword')?.valid
+      && this.form.get('oldPassword')?.valid
       && this.form.get('city')?.valid
       && this.form.get('duration')?.valid  
-      && this.form.get('duration')?.valid
     ) {
-      console.log("singup clicked")
       if(this.isEditMode) {
         this.userLogin.username = this.userService.user()?.username as string;
         this.userLogin.password = (this.form.controls['oldPassword'].value);
         this.userSignUp.username = this.userService.user()?.username as string;
         this.userSignUp.password = (this.form.controls['newPassword'].value);
         this.userSignUp.city = this.form.controls['city'].value;
+        this.userSignUp.email = this.form.controls['email'].value;
         this.userSignUp.living_since.days = this.form.controls['duration'].get('days')?.value;
         this.userSignUp.living_since.months = this.form.controls['duration'].get('months')?.value;
         this.userSignUp.living_since.years = this.form.controls['duration'].get('years')?.value;
@@ -125,7 +124,7 @@ export class SignupComponent {
       this.userSignUp.living_since.days = this.form.controls['duration'].get('days')?.value;
       this.userSignUp.living_since.months = this.form.controls['duration'].get('months')?.value;
       this.userSignUp.living_since.years = this.form.controls['duration'].get('years')?.value;
-      this.userSignUp.security_answer = (this.form.controls['securityAnswer'].value);
+      this.userSignUp.email = (this.form.controls['email'].value);
       this.service.signup(this.userSignUp).subscribe({
         next: () => {
           console.log("user signed up");
@@ -143,6 +142,9 @@ export class SignupComponent {
           console.log(error.error)
           if (error.error.message === "Username not available") {
             this.usernameNotAvailable = true;
+          }
+          if (error.error.message === InvalidEmail) {
+            this.emailNotAvailable = true;
           }
         }
       })

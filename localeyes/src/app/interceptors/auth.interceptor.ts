@@ -7,7 +7,7 @@ import { EMPTY, Observable } from "rxjs";
 
 export const AuthInterceptor: HttpInterceptorFn =
 (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
-    const skipUrls = ['/signup', '/login', '/forgot-password'];
+    const skipUrls = ['/signup', '/login', '/forget-password', 'reset-password'];
     if(skipUrls.some(url => req.url.includes(url))) {
       return next(req);
     }

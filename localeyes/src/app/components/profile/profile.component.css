@@ -33,11 +33,18 @@ button {
 }
 
 .details {
-  width: 100%;
   margin-top: 20px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+}
+
+.details-row {
+  display: flex;
+  flex: 2;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .user-image {
@@ -47,15 +54,16 @@ button {
 
 .content {
   background: var(--gradientGreen);
-  padding-left: 2%;
-  padding-right: 2%;
-  padding-block: 1px;
-  border-radius: 50px;
-  width: 30%;
+  width:400px;
+  padding-block: 0.5px;
+  padding-inline: 10px;
+  border-radius: 30px;
+  margin-bottom: 10px;
 }
 
 .field {
   margin-block: 0;
+  margin-right: 20px;
 }
 
 .heading {

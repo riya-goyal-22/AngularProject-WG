@@ -1,6 +1,7 @@
 export const SignUp = "http://localhost:8000/signup"
 export const Login = "http://localhost:8000/login"
-export const ForgetPassword = "http://localhost:8000/forget-password"
+export const ForgetPassword = "http://localhost:8000/reset-password"
+export const OTP = "http://localhost:8000/forget-password"
 export const GetAllPosts = "http://localhost:8000/api/posts/all"
 export const CreatePost = "http://localhost:8000/api/post"
 export const GetUserPosts = "http://localhost:8000/api/user/posts/all"

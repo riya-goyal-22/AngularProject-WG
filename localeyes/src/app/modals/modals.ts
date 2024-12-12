@@ -7,11 +7,12 @@ export interface UserSignUp {
     months: Number;
     years: Number;
   }
-  security_answer: string;
+  email: string;
 }
 
 export interface User {
   id: string;
+  email: string;
   username: string;
   living_since: number;
   city: string;
@@ -71,7 +72,11 @@ export interface EditPost {
 }
 
 export interface ResetPassword {
-  username: string,
+  email: string,
   new_password: string,
-  security_answer: string,
+  otp: number,
+}
+
+export interface Otp {
+  email: string,
 }

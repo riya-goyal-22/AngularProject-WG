@@ -24,6 +24,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { TooltipModule } from 'primeng/tooltip';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { BadgeModule } from 'primeng/badge';
+import { InputOtp, InputOtpModule } from 'primeng/inputotp';
 
 import { AppComponent } from "./app.component";
 import { appConfig } from "./app.config";
@@ -99,7 +100,8 @@ import { AccessInterceptor } from "./interceptors/access.interceptor";
     ProgressSpinnerModule,
     TooltipModule,
     InfiniteScrollModule,
-    BadgeModule
+    BadgeModule,
+    InputOtpModule
 ],
   providers: [
     appConfig.providers,

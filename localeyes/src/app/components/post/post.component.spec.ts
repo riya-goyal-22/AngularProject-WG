@@ -1,19 +1,19 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { MessageService, ConfirmationService, MenuItemCommandEvent } from 'primeng/api';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PostComponent } from './post.component';
 import { PostService } from '../../services/post.service';
 import { UserService } from '../../services/user.service';
 import { AdminService } from '../../services/admin.service';
-import { of, throwError } from 'rxjs';
-import { Post } from '../../modals/modals';
-import { computed, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, signal } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { Router } from '@angular/router';
+import { ConfirmationService, MenuItemCommandEvent, MessageService } from 'primeng/api';
+import { of } from 'rxjs';
+import { Post, User } from '../../modals/modals';
+import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { EditPostDirective } from '../../directives/edit-post.directive';
 
 describe('PostComponent', () => {
   let component: PostComponent;
   let fixture: ComponentFixture<PostComponent>;
-  let postService: jasmine.SpyObj<PostService>;
+  let mockPostService: jasmine.SpyObj<PostService>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockAdminService: jasmine.SpyObj<AdminService>;
   let mockRouter: jasmine.SpyObj<Router>;
@@ -22,41 +22,55 @@ describe('PostComponent', () => {
 
   const mockPost: Post = {
     post_id: '1',
-    user_id: '11',
-    title: 'string',
+    user_id: 'user1',
+    likes: 5,
+    users: [],
+    title: 'Test title',
+    content: 'Content',
     type: 'food',
-    content: 'string',
-    likes: 0,
-    created_at: 'string',
-    users: null,
+    created_at: '',
     questions: []
   };
 
-  const mockUser = {
-    id: '1',
-    username: 'user1',
-    living_since: 0,
-    city: 'string',
-    tag: 'string',
+  const mockUser: User = {
+    id: 'user1',
+    email: '',
+    username: 'testuser',
+    city: 'Test City',
+    tag: 'test',
+    living_since: 2020,
     active_status: true
   };
 
-  beforeEach(async () => {
-    const mockPostService = jasmine.createSpyObj('PostService', 
-      ['LikePost', 'DislikePost', 'deletePost'],
-      {
-        activePost: signal(null),
-        posts: signal([]),
-        userPosts: signal([]),
-        isDisplayingProfile: signal(false),
-        activePostMaker: signal(''),
-        isPostClicked: signal(false),
-        isDisplayingAdmin: signal(false)
-      }
-    );
+  beforeEach(() => {
+    // Create spy objects with method and property spies
+    mockPostService = jasmine.createSpyObj('PostService', [
+      'LikePost', 
+      'DislikePost', 
+      'deletePost', 
+      'isDisplayingProfile'
+    ], {
+      activePost: signal({
+        post_id: '2',
+        user_id: 'user1',
+        likes: 5,
+        users: [],
+        title: 'Test title',
+        content: 'Content',
+        type: 'food',
+        created_at: '',
+        questions: []
+      }),
+      userPosts: signal([]),
+      posts: signal([]),
+      isDisplayingProfile: signal(false),
+      isDisplayingAdmin: signal(false),
+      isPostClicked: signal(false),
+      activePostMaker: signal('')
+    });
 
-    mockUserService = jasmine.createSpyObj('UserService', ['getUserById'], {
-      user: signal({ id: 'currentUser' })
+    mockUserService = jasmine.createSpyObj('UserService', ['getUserById', 'user'], {
+      user: signal(mockUser)
     });
 
     mockAdminService = jasmine.createSpyObj('AdminService', ['deletePost']);
@@ -64,10 +78,14 @@ describe('PostComponent', () => {
     mockMessageService = jasmine.createSpyObj('MessageService', ['add']);
     mockConfirmationService = jasmine.createSpyObj('ConfirmationService', ['confirm']);
 
-    await TestBed.configureTestingModule({
-      declarations: [PostComponent],
+    TestBed.configureTestingModule({
+      declarations: [
+        PostComponent
+      ],
+      imports: [
+        EditPostDirective
+      ],
       schemas: [
-        NO_ERRORS_SCHEMA,
         CUSTOM_ELEMENTS_SCHEMA
       ],
       providers: [
@@ -78,158 +96,159 @@ describe('PostComponent', () => {
         { provide: MessageService, useValue: mockMessageService },
         { provide: ConfirmationService, useValue: mockConfirmationService }
       ]
-    }).compileComponents();
-  });
+    });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PostComponent);
-    fixture.componentRef.setInput('post', mockPost);
+    fixture.componentRef.setInput('post',mockPost)
     component = fixture.componentInstance;
-    
-    // Set required input properties before ngOnInit
-    component.isHighlight = signal(false);
-    
-    component.items = [
-      {
-        label: 'Options',
-        items: [
-          {
-            label: 'Edit',
-            icon: 'pi pi-pencil',
-            command: (event: MenuItemCommandEvent) => {}
-          },
-          {
-            label: 'Delete',
-            icon: 'pi pi-trash',
-            command: (event: MenuItemCommandEvent) => {}
-          }
-        ]
-      }
-    ];
 
-    postService = TestBed.inject(PostService) as jasmine.SpyObj<PostService>
+    //(component.post as any) = () => mockPost;
 
-    // Setup default getUserById response
+    // common return values
     mockUserService.getUserById.and.returnValue(of({ 
       data: mockUser, 
       code: 200, 
-      message: 'success'
+      message: 'success' 
     }));
-
-    fixture.detectChanges(); // This will trigger ngOnInit
+    //mockPostService.isDisplayingProfile.and.returnValue(false);
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should initialize postMaker on ngOnInit', fakeAsync(() => {
-    tick();
-    expect(component.postMaker).toEqual(mockUser);
-  }));
+  describe('Initialization', () => {
+    it('should fetch post maker details on init', () => {
+      fixture.detectChanges();
+      expect(mockUserService.getUserById).toHaveBeenCalledWith(mockPost.user_id);
+      expect(component.postMaker).toEqual(mockUser);
+    });
 
-  it('should handle like toggle when post is not liked', fakeAsync(() => {
-    postService.LikePost.and.returnValue(of({
-      data: [], 
-      code: 200, 
-      message: 'success'
-    }));
-
-    component.toggleLike();
-    tick();
-
-    expect(postService.LikePost).toHaveBeenCalledWith(mockPost.post_id);
-    expect(postService.posts()).toEqual([]);
-    expect(component.isHighlight()).toBeTruthy();
-  }));
-
-  it('should handle like toggle when post is already liked', fakeAsync(() => {
-    component.isHighlight.set(true);
-    postService.DislikePost.and.returnValue(of({
-      data: [], 
-      code: 200, 
-      message: 'success'
-    }));
-
-    component.toggleLike();
-    tick();
-
-    expect(postService.DislikePost).toHaveBeenCalledWith(mockPost.post_id);
-    expect(postService.posts()).toEqual([]);
-    expect(component.isHighlight()).toBeFalsy();
-  }));
-
-  it('should set up post for editing and navigate', () => {
-    const mockEvent: MenuItemCommandEvent = {
-      originalEvent: new MouseEvent('click'),
-      item: {
-        label: 'Edit',
-        icon: 'pi pi-pencil'
-      }
-    };
-
-    component.items![0].items![0].command!(mockEvent);
-
-    expect(postService.activePost()).toEqual(mockPost);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/profile/edit-post']);
+    it('should set up menu items correctly', () => {
+      fixture.detectChanges();
+      expect(component.items).toBeDefined();
+      expect(component.items![0].label).toBe('Options');
+      expect(component.items![0].items!.length).toBe(2);
+    });
   });
 
-  it('should handle delete confirmation correctly', fakeAsync(() => {
-    postService.deletePost.and.returnValue(of({
-      data: [], 
-      code: 200, 
-      message: 'success'
-    }));
-    
-    const mockEvent: MenuItemCommandEvent = {
-      originalEvent: new MouseEvent('click'),
-      item: {
-        label: 'Delete',
-        icon: 'pi pi-trash'
-      }
-    };
-
-    component.items![0].items![1].command!(mockEvent);
-    
-    const confirmOptions = mockConfirmationService.confirm.calls.mostRecent().args[0];
-    confirmOptions.accept!();
-    tick();
-
-    expect(postService.deletePost).toHaveBeenCalledWith();
-    expect(mockMessageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Successfully deleted'
+  describe('Post Highlighting', () => {
+    it('should set isHighlight to false initially', () => {
+      component.ngOnChanges();
+      expect(component.isHighlight()).toBeFalse();
     });
-    expect(postService.userPosts()).toEqual([]);
-  }));
 
-  it('should open post details correctly', () => {
-    component.postMaker = mockUser;
-    component.openPost();
-
-    expect(postService.activePost()).toEqual(mockPost);
-    expect(postService.activePostMaker()).toEqual(mockUser.username);
-    expect(postService.isPostClicked()).toEqual(true);
+    it('should set isHighlight to true if user has liked the post', () => {
+      const postWithUserLike = {...mockPost, users: ['user1']};
+      (component.post as any) = () => postWithUserLike;
+      component.ngOnChanges();
+      expect(component.isHighlight()).toBeTrue();
+    });
   });
 
-  it('should handle admin delete correctly', fakeAsync(() => {
-    mockAdminService.deletePost.and.returnValue(of({
-      data: [], 
-      code: 200, 
-      message: 'success'
-    }));
+  describe('Like Functionality', () => {
+    it('should dislike post when already liked', () => {
+      component.isHighlight.set(true);
+      mockPostService.DislikePost.and.returnValue(of({ 
+        data: null, 
+        code: 200, 
+        message: 'Disliked successfully' 
+      }));
 
-    component.deletePost();
-    tick();
+      component.toggleLike();
 
-    expect(postService.activePost()).toEqual(mockPost);
-    expect(mockAdminService.deletePost).toHaveBeenCalled();
-    expect(mockMessageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Successfully deleted'
+      expect(mockPostService.DislikePost).toHaveBeenCalledWith(mockPost.post_id);
+      expect(component.isHighlight()).toBeFalse();
     });
-    expect(postService.posts()).toEqual([]);
-  }));
+
+    it('should like post when not previously liked', () => {
+      component.isHighlight.set(false);
+      mockPostService.LikePost.and.returnValue(of({ 
+        data: null, 
+        code: 200, 
+        message: 'Liked successfully' 
+      }));
+
+      component.toggleLike();
+
+      expect(mockPostService.LikePost).toHaveBeenCalledWith(mockPost.post_id);
+      expect(component.isHighlight()).toBeTrue();
+    });
+  });
+
+  describe('Post Actions', () => {
+    it('should set active post and mark as clicked', () => {
+      component.openPost();
+
+      expect(mockPostService.activePost()).toEqual(mockPost);
+      expect(mockPostService.activePostMaker()).toEqual(mockUser.username);
+      expect(mockPostService.isPostClicked()).toEqual(true);
+    });
+  });
+
+  describe('Menu Item Actions', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('should navigate to edit post', () => {
+      const editItem = component.items![0].items![0];
+      editItem.command!({} as MenuItemCommandEvent);
+
+      expect(mockPostService.activePost()).toEqual(mockPost);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/profile/edit-post']);
+    });
+
+    it('should handle post deletion confirmation', () => {
+      mockConfirmationService.confirm.and.callFake((config) => {
+        return config.accept && config.accept();
+      });
+
+      mockPostService.deletePost.and.returnValue(of({ 
+        data: null, 
+        code: 200, 
+        message: 'Deleted successfully' 
+      }));
+
+      const deleteItem = component.items![0].items![1];
+      deleteItem.command!({} as MenuItemCommandEvent);
+
+      expect(mockPostService.activePost()).toEqual(mockPost);
+      expect(mockMessageService.add).toHaveBeenCalledWith(
+        jasmine.objectContaining({ severity: 'success' })
+      );
+    });
+
+    it('should handle delete confirmation rejection', () => {
+      mockConfirmationService.confirm.and.callFake((config) => {
+        return config.reject && config.reject();
+      });
+
+      const deleteItem = component.items![0].items![1];
+      deleteItem.command!({} as MenuItemCommandEvent);
+
+      expect(mockMessageService.add).toHaveBeenCalledWith(
+        jasmine.objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('Admin Post Deletion', () => {
+    it('should delete post via admin service', () => {
+      mockAdminService.deletePost.and.returnValue(of({ 
+        data: null, 
+        code: 200, 
+        message: 'Deleted successfully' 
+      }));
+
+      component.deletePost();
+
+      expect(mockPostService.activePost()).toEqual(mockPost);
+      expect(mockAdminService.deletePost).toHaveBeenCalled();
+      expect(mockMessageService.add).toHaveBeenCalledWith(
+        jasmine.objectContaining({ severity: 'success' })
+      );
+    });
+  });
 });

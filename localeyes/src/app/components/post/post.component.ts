@@ -27,6 +27,7 @@ export class PostComponent implements OnInit {
   items: MenuItem[] | undefined;
   postMaker: User = {
     username: '',
+    email: '',
     city: '',
     id: '',
     tag: '',

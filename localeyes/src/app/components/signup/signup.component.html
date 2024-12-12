@@ -12,7 +12,7 @@
         <div class="p-field">
           <p-floatLabel>
             <input id="username" type="text" pInputText formControlName="username" />
-            <label for="username">Username</label>
+            <label for="username">Username*</label>
           </p-floatLabel>
           @if (usernameNotAvailable) {
             <p class="error-message">Username already exist</p>
@@ -57,7 +57,7 @@
                 [style]="{ width: '100%' }"
                 class="password"
               ></p-password>
-              <label for="password">Password</label>
+              <label for="password">Password*</label>
             </p-floatLabel>
           </div>
         }
@@ -65,15 +65,18 @@
         <div class="p-field">
           <p-floatLabel>
             <input id="city" formControlName="city" pInputText type="text" placeholder=" " />
-            <label for="city">City</label>
+            <label for="city">City*</label>
           </p-floatLabel>
         </div>
   
         <div class="p-field">
           <p-floatLabel>
-            <input id="answer" formControlName="securityAnswer" pInputText type="text" placeholder=" " />
-            <label for="answer">Your Nickname + favourite food😋</label>
+            <input id="answer" formControlName="email" pInputText type="text" placeholder=" " />
+            <label for="answer">Your email*</label>
           </p-floatLabel>
+          @if (emailNotAvailable) {
+            <p class="error-message">Email Already registered</p>
+          }
         </div>
   
         <label>Duration Living in City:</label>
@@ -97,7 +100,6 @@
             [disabled]="
               form.get('username')?.invalid 
               && form.get('newPassword')?.invalid
-              && form.get('securityAnswer')?.invalid
               && form.get('city')?.invalid
               && form.get('duration')?.invalid 
               && form.get('oldPassword')?.invalid"

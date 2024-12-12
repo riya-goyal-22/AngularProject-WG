@@ -16,6 +16,7 @@ describe('AdminService', () => {
 
   const mockUser: User = {
     id: '123',
+    email: 'xyz@gmail.com',
     username: 'testuser',
     city: 'Test City',
     living_since: 2,

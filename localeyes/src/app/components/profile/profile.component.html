@@ -23,28 +23,42 @@
     </div>
   </div>
   <div class="details">
-    <div class="field">
-      <label>Username</label>
-      <div class="content">
-        <p>{{userService.user()?.username}}</p>
+    <div class="details-row">
+      <div class="field">
+        <label>Username</label>
+        <div class="content">
+          <p>{{userService.user()?.username}}</p>
+        </div>
+      </div>
+      <div class="field">
+        <label>Tag</label>
+        <div class="content">
+          <p>{{userService.user()?.tag}}</p>
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label>Tag</label>
-      <div class="content">
-        <p>{{userService.user()?.tag}}</p>
+    
+    <div class="details-row">
+      <div class="field">
+        <label>City</label>
+        <div class="content">
+          <p>{{userService.user()?.city}}</p>
+        </div>
+      </div>
+      <div class="field">
+        <label>Dwelling Age</label>
+        <div class="content">
+          <p>{{userService.user()?.living_since}}</p>
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label>City</label>
-      <div class="content">
-        <p>{{userService.user()?.city}}</p>
-      </div>
-    </div>
-    <div class="field">
-      <label>Dwelling Age</label>
-      <div class="content">
-        <p>{{userService.user()?.living_since}}</p>
+    
+    <div class="details-row">
+      <div class="field">
+        <label>Email</label>
+        <div class="content">
+          <p>{{userService.user()?.email}}</p>
+        </div>
       </div>
     </div>
   </div>

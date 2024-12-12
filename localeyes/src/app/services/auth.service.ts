@@ -3,9 +3,9 @@ import { inject, Injectable, signal, WritableSignal } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { ResetPassword, UserLogin, UserSignUp } from "../modals/modals";
+import { Otp, ResetPassword, UserLogin, UserSignUp } from "../modals/modals";
 import { CustomResponse } from "../modals/modals";
-import { ForgetPassword, Login, SignUp } from "../constants/urls";
+import { ForgetPassword, Login, OTP, SignUp } from "../constants/urls";
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,13 @@ export class AuthService {
   resetPassword(user: ResetPassword): Observable<CustomResponse> {
     return this.httpClient
     .post<CustomResponse>(ForgetPassword,user)
+  }
+
+  otp(email: Otp): Observable<CustomResponse> {
+    console.log('called otp')
+    console.log(email)
+    console.log(OTP)
+    return this.httpClient
+    .post<CustomResponse>(OTP,email)
   }
 }

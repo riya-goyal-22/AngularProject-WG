@@ -80,9 +80,9 @@ describe('ResetPasswordFormComponent', () => {
 
     // Check if the resetPassword method was called
     expect(authServiceSpy.resetPassword).toHaveBeenCalledWith({
-      username: 'testuser',
+      email: 'testuser',
       new_password: 'ValidPassword@123',
-      security_answer: 'SomeSecurityAnswer'
+      otp: 123
     });
 
     // Check if the form was reset
