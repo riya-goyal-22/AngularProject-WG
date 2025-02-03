@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 
 import { ConfirmationService, MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
 
-import { Post, User } from '../../modals/modals';
+import { Post, User , PostMetadata, PostLike } from '../../modals/modals';
 import { PostService } from '../../services/post.service';
 import { UserService } from '../../services/user.service';
 import { AdminService } from '../../services/admin.service';
+import { PostLiked, PostNotLiked } from '../../constants/constants';
 
 @Component({
   selector: 'app-post',
@@ -34,14 +35,31 @@ export class PostComponent implements OnInit {
     living_since: 0,
     active_status: false
   }
+  deletePostModel: PostMetadata = {
+    created_at: '',
+    type: 'FOOD'
+  }
+  likePostModel: PostLike = {
+    created_at: '',
+    type: 'FOOD',
+    user_id: ''
+  }
   
   ngOnChanges(){
-    this.isHighlight.set(false);
-    if(this.post().users?.includes(this.userService.user()?.id as string)) {
-      this.isHighlight.set(true);
-    } }
+    console.log("hey inside on changes")
+    this.postService.getLikeStatus(this.post().post_id).subscribe({
+      next: (result) => {
+        if (result.data == PostLiked){
+          this.isHighlight.set(true)
+        }else{
+          this.isHighlight.set(false)
+        }
+      },
+    })
+   }
 
   ngOnInit() {
+    console.log("inside ng on init")
     this.userService.getUserById(this.post().user_id).subscribe({
       next: (response) => {
         this.postMaker = response.data
@@ -73,7 +91,9 @@ export class PostComponent implements OnInit {
                       rejectIcon:"none",
                       rejectButtonStyleClass:"p-button-text",
                       accept: () => {
-                        this.postService.deletePost().subscribe({
+                        this.deletePostModel.created_at = this.post().created_at
+                        this.deletePostModel.type = this.post().type
+                        this.postService.deletePost(this.deletePostModel).subscribe({
                           next: () => {
                             this.messageService.add({
                               severity: 'success',
@@ -98,53 +118,48 @@ export class PostComponent implements OnInit {
   }
 
   toggleLike() {
-    if (this.isHighlight()){
-      this.postService.DislikePost(this.post().post_id).subscribe({
-        next: () => {
+    this.likePostModel.created_at = this.post().created_at
+    this.likePostModel.type = this.post().type
+    this.likePostModel.user_id = this.post().user_id
+    this.postService.LikePost(this.post().post_id,this.likePostModel).subscribe({
+      next: (result) => {
+        if (result.data== PostLiked) {
           if(this.postService.isDisplayingProfile()){
             this.postService.userPosts.update((posts) => 
               posts.map((post) => 
                 post.post_id === this.post().post_id ?
-                { ...post, likes: Number(post.likes)-1, users: post.users!.filter((user_id) => 
-                user_id!=this.userService.user()?.id)} : post //
+                { ...post, likes: Number(post.likes)+1} : post
               )
             )
           }else {
             this.postService.posts.update((posts) => 
               posts.map((post) => 
                 post.post_id === this.post().post_id ?
-                { ...post, likes: Number(post.likes)-1, users: post.users!.filter((user_id) => 
-                user_id!=this.userService.user()?.id)} : post //
+                { ...post, likes: Number(post.likes)+1} : post //
+              )
+            )
+          }
+          this.isHighlight.set(true);
+        }else if (result.data == PostNotLiked){
+          if(this.postService.isDisplayingProfile()){
+            this.postService.userPosts.update((posts) => 
+              posts.map((post) => 
+                post.post_id === this.post().post_id ?
+                { ...post, likes: Number(post.likes)-1} : post //
+              )
+            )
+          }else {
+            this.postService.posts.update((posts) => 
+              posts.map((post) => 
+                post.post_id === this.post().post_id ?
+                { ...post, likes: Number(post.likes)-1} : post //
               )
             )
           }
           this.isHighlight.set(false);
         }
-      });
-    } else {
-      this.postService.LikePost(this.post().post_id).subscribe({
-        next: () => {
-          if(this.postService.isDisplayingProfile()){
-            this.postService.userPosts.update((posts) => 
-              posts.map((post) => 
-                post.post_id === this.post().post_id ?
-                { ...post, likes: Number(post.likes)+1, users: post.users?.includes(this.userService.user()?.id as string) ? post.users 
-                  : [...post.users!, this.userService.user()?.id as string],} : post //
-              )
-            )
-          }else {
-            this.postService.posts.update((posts) => 
-              posts.map((post) => 
-                post.post_id === this.post().post_id ?
-                { ...post, likes: Number(post.likes)+1, users: post.users?.includes(this.userService.user()?.id as string) ? post.users 
-                  : [...post.users!, this.userService.user()?.id as string],} : post //
-              )
-            )
-          }
-          this.isHighlight.set(true);
-        }
-      });
-    }
+      }
+    });
   }
 
   openPost() {
@@ -154,8 +169,10 @@ export class PostComponent implements OnInit {
   }
 
   deletePost() {
+    this.deletePostModel.created_at = this.post().created_at
+    this.deletePostModel.type = this.post().type
     this.postService.activePost.set(this.post());
-      this.adminService.deletePost().subscribe({
+      this.adminService.deletePost(this.deletePostModel,this.post().user_id).subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',

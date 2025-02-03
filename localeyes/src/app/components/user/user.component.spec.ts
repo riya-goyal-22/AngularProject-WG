@@ -12,7 +12,8 @@ const mockUser:User = {
   living_since: 1,
   city: 'delhi',
   tag: 'tag',
-  active_status: true
+  active_status: true,
+  email: ''
 }
 
 // Mock services with createSpyObj
@@ -31,7 +32,8 @@ describe('UserComponent', () => {
       living_since: 1,
       city: 'delhi',
       tag: 'tag',
-      active_status: true
+      active_status: true,
+      email: ''
     }])
     adminService = jasmine.createSpyObj('AdminService', [
       'deleteUser',

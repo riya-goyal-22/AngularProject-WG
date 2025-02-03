@@ -6,6 +6,8 @@ import { QuestionService } from '../../services/question.service';
 import { Question } from '../../modals/modals';
 import { AdminService } from '../../services/admin.service';
 import { PostService } from '../../services/post.service';
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-question',
@@ -14,14 +16,17 @@ import { PostService } from '../../services/post.service';
 })
 export class QuestionComponent {
   service = inject(QuestionService);
+  userService = inject(UserService);
   messageService = inject(MessageService);
   question = input.required<Question>();
   postService = inject(PostService);
   adminService = inject(AdminService);
+  authService = inject(AuthService);
 
   ngOnInit() {
     this.service.activeQuestion.set(this.question());
-    console.log(this.service.activeQuestion())
+    console.log(this.userService.user()?.id)
+    console.log(this.question().q_user_id)
   }
 
   showAnswerForm() {
@@ -31,6 +36,11 @@ export class QuestionComponent {
 
   showAnswers() {
     this.service.activeQuestion.set(this.question());
+    this.service.getAllAnswers().subscribe({
+      next: (result) => {
+        this.service.answers.set(result.data)
+      }
+    })
     this.service.viewAnswers = true;
   }
 

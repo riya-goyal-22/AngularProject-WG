@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 
 import { MessageService } from 'primeng/api';
 
-import { User } from '../../modals/modals';
+import { DeleteUserModal, User } from '../../modals/modals';
 import { AdminService } from '../../services/admin.service';
 
 @Component({
@@ -15,10 +15,16 @@ export class UserComponent {
   user = input.required<User>();
   adminService = inject(AdminService);
   messageService = inject(MessageService);
+  userModel: DeleteUserModal = {
+    username: '',
+    email: ''
+  }
 
   delete() {
+    this.userModel.username = this.user().username
+    this.userModel.email = this.user().email
     this.adminService.user.set(this.user());
-    this.adminService.deleteUser().subscribe({
+    this.adminService.deleteUser(this.userModel).subscribe({
       next: () => {
         this.adminService.users.update(current => current?.filter((user) => {
           return user.id!=this.user().id

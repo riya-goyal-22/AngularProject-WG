@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { Deactivate, GetUserById, GetUserNotifications, GetUserProfile } from "../constants/urls";
-import { CustomResponse, User, UserSignUp } from "../modals/modals";
+import { CustomResponse, User, UserEdit, UserSignUp } from "../modals/modals";
 import { Observable, throwError } from "rxjs";
 
 @Injectable ({
@@ -11,7 +11,7 @@ import { Observable, throwError } from "rxjs";
 export class UserService {
   httpClient = inject(HttpClient);
   user = signal<User|undefined>(undefined);
-  userNotifications = signal<string[]>([]);
+  userNotifications = signal<Notification[]>([]);
 
   profile(): Observable<CustomResponse> {
     return this.httpClient.get<CustomResponse>(GetUserProfile)
@@ -21,7 +21,7 @@ export class UserService {
     return this.httpClient.get<CustomResponse>(GetUserNotifications)
   }
 
-  edit(user: UserSignUp): Observable<CustomResponse> {
+  edit(user: UserEdit): Observable<CustomResponse> {
     if(!this.user()) {
       return throwError(() => new Error('No user selected'))
     }

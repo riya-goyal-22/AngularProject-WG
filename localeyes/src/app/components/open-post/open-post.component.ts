@@ -22,29 +22,21 @@ export class OpenPostComponent implements OnInit{
     user_id: '',
     title: '',
     content: '',
-    type: 'food',
+    type: 'FOOD',
     created_at: '',
     likes: 0,
-    users: null,
-    questions: []
   }
 
   ngOnInit() {
-    this.service.getPostById().subscribe({
-      next: (response) => {
-        this.post = {
-          post_id: response.data.post_id,
-          user_id: response.data.user_id,
-          title: response.data.title,
-          content: response.data.content,
-          type: response.data.type,
-          created_at: response.data.created_at,
-          likes: response.data.likes,
-          questions: response.data.questions,
-          users: response.data.users,
-        }
-      }
-    })
+    this.post = {
+      post_id:this.service.activePost()!.post_id,
+      user_id: this.service.activePost()!.user_id,
+      title: this.service.activePost()!.title,
+      content: this.service.activePost()!.content,
+      type: this.service.activePost()!.type,
+      created_at: this.service.activePost()!.created_at,
+      likes: this.service.activePost()!.likes
+    }
   }
 
   closeOverlay() {
@@ -52,7 +44,11 @@ export class OpenPostComponent implements OnInit{
   }
 
   openQuestions() {
-    this.questionService.questions.set(this.post.questions);
+    this.questionService.getAllquestions().subscribe({
+      next: (result) => {
+        this.questionService.questions.set(result.data)
+      } 
+    })
     this.router.navigate(['/questions']);
   }
 }

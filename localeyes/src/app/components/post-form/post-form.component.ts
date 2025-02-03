@@ -25,7 +25,9 @@ export class PostFormComponent {
   }
   editPost: EditPost = {
     title: '',
-    content: ''
+    content: '',
+    type: 'FOOD',
+    created_at: ''
   }
 
   ngOnInit() {
@@ -53,7 +55,9 @@ export class PostFormComponent {
           this.form.controls.content.value){
             this.editPost = {
               title: this.form.controls.title.value,
-              content: this.form.controls.content.value
+              content: this.form.controls.content.value,
+              type: this.service.activePost()!.type ,
+              created_at: this.service.activePost()?.created_at as string
             }
           }
           this.service.editPost(this.editPost).subscribe({
@@ -76,7 +80,7 @@ export class PostFormComponent {
       ){
         this.newPost.title = this.form.controls['title'].value;
         this.newPost.content = this.form.controls.content.value;
-        this.newPost.type = (this.form.controls.selectedFilter.value).toLowerCase();
+        this.newPost.type = (this.form.controls.selectedFilter.value).toUpperCase();
       }
       this.service.createPost(this.newPost).subscribe({
         next: () => {

@@ -30,7 +30,8 @@ describe('HomeComponent', () => {
     city: 'test@test.com',
     tag: 'user',
     living_since: 1,
-    active_status: true
+    active_status: true,
+    email: ''
   };
   
   const mockPosts: Post[] = [

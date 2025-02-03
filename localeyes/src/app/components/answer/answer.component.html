@@ -1,0 +1,29 @@
+<div class="field">
+  <div class="answer">
+    <div class="text">
+      <p>{{answer().answer}}</p>
+    </div>
+
+    @if(authService.role === 'admin') {
+      <div class="btn">
+        <button 
+            class="p-button p-button-text p-button-danger" 
+            type="button"
+            (click)="deleteAnswerByAdmin()">
+            <i class="pi pi-trash"></i>
+          </button>
+      </div>
+    } @else {
+      <div class="btn">
+        @if(userService.user()?.id === answer().r_user_id) {
+          <button 
+            class="p-button p-button-text p-button-danger" 
+            type="button"
+            (click)="deleteAnswer()">
+            <i class="pi pi-trash"></i>
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>

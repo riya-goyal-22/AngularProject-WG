@@ -6,7 +6,7 @@
     [routerLink]="'/home'"
   >
   <div class="actions">
-    @if (authService.isAdminLogin()) {
+    @if (authService.role == 'admin') {
       <div class="right-margin">
         <p-button
           label="Manage Posts"

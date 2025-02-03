@@ -10,6 +10,16 @@ export interface UserSignUp {
   email: string;
 }
 
+export interface UserEdit {
+  password: string;
+  city: string;
+  living_since: {
+    days: Number;
+    months: Number;
+    years: Number;
+  }
+}
+
 export interface User {
   id: string;
   email: string;
@@ -18,6 +28,11 @@ export interface User {
   city: string;
   tag: string;
   active_status: boolean;
+}
+
+export interface DeleteUserModal {
+  username: string;
+  email: string;
 }
 
 export interface UserLogin {
@@ -35,13 +50,23 @@ export interface Post {
   post_id: string;
   user_id: string;
   title: string;
-  type: 'food'|'shopping'|'travel'|'other';
+  type: 'FOOD'|'SHOPPING'|'TRAVEL';
   content: string;
   likes: Number;
   created_at: string;
-  users: string[] | null;
-  questions: Question[]
 }
+
+export interface PostMetadata {
+  created_at: string;
+  type: 'FOOD'|'SHOPPING'|'TRAVEL';
+}
+
+export interface PostLike{
+  created_at: string;
+  type: 'FOOD'|'SHOPPING'|'TRAVEL';
+  user_id : string;
+}
+
 
 export interface NewPost {
   title: string;
@@ -50,25 +75,42 @@ export interface NewPost {
 }
 
 export interface Question {
-    question_id: string,
-    post_id?: string,
-    user_id?: string,
-    text: string,
-    replies: string[],
-    created_at?: string
+    question_id: string;
+    post_id?: string;
+    q_user_id?: string;
+    text: string;
 }
 
 export interface NewQuestion {
-  question: string
+  text: string
 }
 
 export interface NewAnswer {
   answer: string
 }
 
+export interface Answer {
+  r_id: string,
+  r_user_id: string,
+  q_id: string,
+  answer: string,
+}
+
 export interface EditPost {
-  title: string,
-  content: string
+  title: string;
+  content: string;
+  created_at: string;
+  type: 'FOOD'|'SHOPPING'|'TRAVEL';
+}
+
+export interface Notification {
+  post_id: string;
+  user_id: string;
+  title: string;
+  type: 'FOOD'|'SHOPPING'|'TRAVEL';
+  content: string;
+  likes: Number;
+  created_at: string;
 }
 
 export interface ResetPassword {

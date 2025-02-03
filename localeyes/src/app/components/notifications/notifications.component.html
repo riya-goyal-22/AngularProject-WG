@@ -7,7 +7,13 @@
 <div class="notifications">
   @for (notification of userService.userNotifications(); track $index) {
     <div class="notification">
-      <p>{{notification}}</p>
+      <p>New Post with Title - {{notification.title}}</p>
     </div>
+    
+    @if (userService.userNotifications().length == 0) {
+      <div class="no-content">
+        <p>No Questions to display</p>
+      </div>
+    }
   }
 </div>

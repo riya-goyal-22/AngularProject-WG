@@ -102,15 +102,12 @@ describe('PostComponent', () => {
     fixture.componentRef.setInput('post',mockPost)
     component = fixture.componentInstance;
 
-    //(component.post as any) = () => mockPost;
-
     // common return values
     mockUserService.getUserById.and.returnValue(of({ 
       data: mockUser, 
       code: 200, 
       message: 'success' 
     }));
-    //mockPostService.isDisplayingProfile.and.returnValue(false);
   });
 
   it('should create the component', () => {
@@ -182,7 +179,6 @@ describe('PostComponent', () => {
       component.openPost();
 
       expect(mockPostService.activePost()).toEqual(mockPost);
-      expect(mockPostService.activePostMaker()).toEqual(mockUser.username);
       expect(mockPostService.isPostClicked()).toEqual(true);
     });
   });

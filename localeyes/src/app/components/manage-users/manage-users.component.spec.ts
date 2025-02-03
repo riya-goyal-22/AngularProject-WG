@@ -17,9 +17,9 @@ describe('ManageUsersComponent', () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   const mockUsers: User[] = [
-    { id: '1', username: 'user1', city: 'delhi', active_status: true ,living_since: 1, tag:'tag'},
-    { id: '2', username: 'user2', city: 'delhi', active_status: true ,living_since: 1, tag:'tag'},
-    { id: '3', username: 'user3', city: 'delhi', active_status: true ,living_since: 1, tag:'tag'},
+    { id: '1', username: 'user1', city: 'delhi', active_status: true ,living_since: 1, tag:'tag',email: ''},
+    { id: '2', username: 'user2', city: 'delhi', active_status: true ,living_since: 1, tag:'tag',email: ''},
+    { id: '3', username: 'user3', city: 'delhi', active_status: true ,living_since: 1, tag:'tag',email: ''},
   ];
 
   beforeEach(async () => {

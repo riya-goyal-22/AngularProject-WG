@@ -170,7 +170,8 @@ describe('HeaderComponent', () => {
         living_since: 0,
         city: 'string',
         tag: 'string',
-        active_status: true
+        active_status: true,
+        email: 'string'
         }
       ] ,code: 200, message: 'success'};
 

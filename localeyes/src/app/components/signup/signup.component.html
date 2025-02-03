@@ -99,10 +99,11 @@
             label="Submit"
             [disabled]="
               form.get('username')?.invalid 
-              && form.get('newPassword')?.invalid
-              && form.get('city')?.invalid
-              && form.get('duration')?.invalid 
-              && form.get('oldPassword')?.invalid"
+              || form.get('newPassword')?.invalid
+              || form.get('email')?.invalid
+              || form.get('city')?.invalid
+              || form.get('duration')?.invalid 
+              || form.get('oldPassword')?.invalid"
           ></button>
           }@else {
             <button 
@@ -111,11 +112,10 @@
             label="Sign Up"
             [disabled]="
               form.get('username')?.invalid 
-              && form.get('newPassword')?.invalid
-              && form.get('securityAnswer')?.invalid
-              && form.get('city')?.invalid
-              && form.get('duration')?.invalid  
-              && form.get('duration')?.invalid"
+              || form.get('newPassword')?.invalid
+              || form.get('email')?.invalid
+              || form.get('city')?.invalid
+              || form.get('duration')?.invalid"
               ></button>
             <span>Already a user? </span>
             <span class="login-link" [routerLink]="'/login'">Login</span>

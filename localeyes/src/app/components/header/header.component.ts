@@ -28,7 +28,9 @@ export class HeaderComponent {
   ngOnInit() {
     this.userService.notifications().subscribe({
       next: (response: CustomResponse) => {
-        this.userService.userNotifications.set(response.data)
+        if (response.data){
+          this.userService.userNotifications.set(response.data)
+        }
       }
     })
   }

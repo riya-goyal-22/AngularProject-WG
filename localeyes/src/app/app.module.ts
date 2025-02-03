@@ -50,6 +50,7 @@ import { ManageUsersComponent } from "./components/manage-users/manage-users.com
 import { UserComponent } from "./components/user/user.component";
 import { LoaderComponent } from "./components/loader/loader.component";
 import { AccessInterceptor } from "./interceptors/access.interceptor";
+import { AnswerComponent } from "./components/answer/answer.component";
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { AccessInterceptor } from "./interceptors/access.interceptor";
     TooltipModule,
     InfiniteScrollModule,
     BadgeModule,
-    InputOtpModule
+    InputOtpModule,
+    AnswerComponent
 ],
   providers: [
     appConfig.providers,

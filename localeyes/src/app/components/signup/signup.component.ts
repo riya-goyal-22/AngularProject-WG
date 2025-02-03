@@ -5,11 +5,11 @@ import { Router } from '@angular/router';
 
 import { MessageService } from 'primeng/api';
 
-import { UserLogin, UserSignUp } from '../../modals/modals';
+import { UserEdit, UserLogin, UserSignUp } from '../../modals/modals';
 import { AuthService } from '../../services/auth.service';
 import { passwordStrengthValidator } from '../../validators/password.validator';
 import { UserService } from '../../services/user.service';
-import { InvalidCredentials, InvalidEmail } from '../../constants/errors';
+import { InvalidCredentials, InvalidEmail, InvalidUsername } from '../../constants/errors';
 
 
 @Component({
@@ -30,6 +30,15 @@ export class SignupComponent {
     },
     email: ''
   }
+  userEdit: UserEdit = {
+    password: '',
+    city: '',
+    living_since: {
+      years: 0,
+      months: 0,
+      days: 0,
+    },
+  }
   userLogin: UserLogin = {
     username: '',
     password: ''
@@ -45,7 +54,7 @@ export class SignupComponent {
 
   form: FormGroup = new FormGroup({
     username: new FormControl('',[Validators.required]),
-    oldPassword: new FormControl('', Validators.required),
+    oldPassword: new FormControl('pass@123', Validators.required),
     newPassword: new FormControl('', [Validators.required, Validators.minLength(6), passwordStrengthValidator()]),
     city: new FormControl('', [Validators.required]),
     duration: new FormGroup({
@@ -80,16 +89,16 @@ export class SignupComponent {
       if(this.isEditMode) {
         this.userLogin.username = this.userService.user()?.username as string;
         this.userLogin.password = (this.form.controls['oldPassword'].value);
-        this.userSignUp.username = this.userService.user()?.username as string;
-        this.userSignUp.password = (this.form.controls['newPassword'].value);
-        this.userSignUp.city = this.form.controls['city'].value;
-        this.userSignUp.email = this.form.controls['email'].value;
-        this.userSignUp.living_since.days = this.form.controls['duration'].get('days')?.value;
-        this.userSignUp.living_since.months = this.form.controls['duration'].get('months')?.value;
-        this.userSignUp.living_since.years = this.form.controls['duration'].get('years')?.value;
+        // this.userSignUp.username = this.userService.user()?.username as string;
+        this.userEdit.password = (this.form.controls['newPassword'].value);
+        this.userEdit.city = this.form.controls['city'].value;
+        //this.userSignUp.email = this.form.controls['email'].value;
+        this.userEdit.living_since.days = this.form.controls['duration'].get('days')?.value;
+        this.userEdit.living_since.months = this.form.controls['duration'].get('months')?.value;
+        this.userEdit.living_since.years = this.form.controls['duration'].get('years')?.value;
         this.service.login(this.userLogin).subscribe({
           next: () => {
-            this.userService.edit(this.userSignUp).subscribe({
+            this.userService.edit(this.userEdit).subscribe({
               next: () => {
                 this.form.reset()
                 this.messageService.add({
@@ -112,7 +121,7 @@ export class SignupComponent {
               this.messageService.add({
                 severity: 'error',
                 summary: 'Old credentials are wrong',
-                detail: "Don't remember🤔->Try forgot password"
+                detail: "Don't remember🤔?"
               })
             }
           }
@@ -140,7 +149,7 @@ export class SignupComponent {
         },
         error: (error:HttpErrorResponse) => {
           console.log(error.error)
-          if (error.error.message === "Username not available") {
+          if (error.error.message === InvalidUsername) {
             this.usernameNotAvailable = true;
           }
           if (error.error.message === InvalidEmail) {

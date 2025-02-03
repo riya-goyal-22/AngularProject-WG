@@ -11,6 +11,10 @@ export class PostsComponent {
   postService = inject(PostService);
   view = input.required<"home"|"profile">();
 
+  ngOnInit() {
+    console.log(this.postService.posts())
+  }
+
   posts = computed(() => this.postService.posts());
   userPosts = computed(() => this.postService.userPosts());
 

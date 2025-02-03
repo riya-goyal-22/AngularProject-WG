@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, Signal, signal } from "@angular/core";
-import { CustomResponse, NewAnswer, NewQuestion, Question } from "../modals/modals";
+import { Answer, CustomResponse, NewAnswer, NewQuestion, Question } from "../modals/modals";
 import { HttpClient } from "@angular/common/http";
 import { PostService } from "./post.service";
-import { AddAnswer, AddQuestion, GetPostQuestions } from "../constants/urls";
+import { AddAnswer, AddQuestion, DeleteAnswer, DeleteQuestion, GetAnswers, GetPostQuestions } from "../constants/urls";
 import { Observable, throwError } from "rxjs";
 
 @Injectable({
@@ -11,8 +11,9 @@ import { Observable, throwError } from "rxjs";
 
 export class QuestionService {
   questions = signal<Question[] | null>(null);
-  answers:Signal<string[] | undefined> = computed(() => this.activeQuestion()?.replies)
+  answers = signal<Answer[] | null >(null);
   activeQuestion = signal<Question|undefined>(undefined);
+  activeAnswer = signal<Answer| undefined>(undefined);
   isAddQuestion: boolean = false;
   isAddAnswer: boolean = false;
   viewAnswers: boolean = false;
@@ -33,7 +34,7 @@ export class QuestionService {
     if(!this.activeQuestion()){
       return throwError(() => new Error('No Question Found'))
     }
-    return this.httpClient.put<CustomResponse>(AddAnswer(this.postService.activePost()?.post_id as string,this.activeQuestion()?.question_id as string),answer)
+    return this.httpClient.post<CustomResponse>(AddAnswer(this.activeQuestion()?.question_id as string),answer)
   }
 
   deleteQuestion(): Observable<CustomResponse> {
@@ -43,7 +44,17 @@ export class QuestionService {
     if(!this.activeQuestion()){
       return throwError(() => new Error('No Question Found'))
     }
-    return this.httpClient.delete<CustomResponse>(AddAnswer(this.postService.activePost()?.post_id as string,this.activeQuestion()?.question_id as string))
+    return this.httpClient.delete<CustomResponse>(DeleteQuestion(this.postService.activePost()?.post_id as string,this.activeQuestion()?.question_id as string))
+  }
+
+  deleteAnswer(): Observable<CustomResponse> {
+    if(!this.activeQuestion()){
+      return throwError(() => new Error('No Question Found'))
+    }
+    if(!this.activeAnswer()){
+      return throwError(() => new Error('No Answer Found'))
+    }
+    return this.httpClient.delete<CustomResponse>(DeleteAnswer(this.activeQuestion()?.question_id as string, this.activeAnswer()?.r_id as string))
   }
 
   getAllquestions(): Observable<CustomResponse> {
@@ -51,5 +62,12 @@ export class QuestionService {
       return throwError(() => new Error('No Post Found'))
     }
     return this.httpClient.get<CustomResponse>(GetPostQuestions(this.postService.activePost()?.post_id as string))
+  }
+
+  getAllAnswers(): Observable<CustomResponse> {
+    if (!this.activeQuestion()){
+      return throwError(() => new Error('No Question Found'))
+    }
+    return this.httpClient.get<CustomResponse>(GetAnswers(this.activeQuestion()?.question_id as string))
   }
 }

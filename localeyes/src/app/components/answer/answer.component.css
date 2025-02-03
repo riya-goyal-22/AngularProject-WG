@@ -1,0 +1,51 @@
+.field {
+  display: flex;
+  align-items: center;
+  margin-block: 1%;
+}
+
+.answer {
+  background: rgba(99, 97, 97, 0.3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 450px;
+  padding: 0.5rem;
+}
+
+.text {
+  text-align: justify;
+  overflow-y: auto;
+  height: 100px;
+  padding: 10px;
+  margin: 10px;
+  width: 80%;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.text::-webkit-scrollbar {
+  display: none;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.trash-btn {
+  color: #dc3545 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0.5rem !important;
+
+  &:hover {
+    background: rgba(220, 53, 69, 0.1) !important;
+  }
+
+  .p-button-icon {
+    font-size: 1.2rem;
+  }
+}

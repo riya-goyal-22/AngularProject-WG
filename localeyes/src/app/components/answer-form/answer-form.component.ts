@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -36,12 +36,6 @@ export class AnswerFormComponent {
             severity:'success',
             summary: 'Success',
             detail: 'Successfully added answer'
-          })
-          this.questionService.questions()?.map((question) => {
-            if (this.questionService.activeQuestion()?.question_id == question.question_id) {
-              question.replies.push(this.answer.answer)
-            }
-            return question
           })
         }
       })

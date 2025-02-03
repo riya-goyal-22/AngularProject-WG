@@ -34,7 +34,8 @@ describe('ProfileComponent', () => {
         living_since: 1,
         tag: 'tag',
         city: '',
-        active_status: true
+        active_status: true,
+        email: ''
       })
     });
 
@@ -86,7 +87,7 @@ describe('ProfileComponent', () => {
       component.ngOnInit();
       tick();
 
-      expect(mockUserService.user()).toEqual(mockUser);
+      expect(mockUserService.user()).toEqual(mockUser as User);
     }));
 
     it('should fetch and set user posts', fakeAsync(() => {

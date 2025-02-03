@@ -14,7 +14,8 @@ describe('UserService', () => {
     city: 'test@test.com',
     tag: 'user',
     living_since: 1,
-    active_status: true
+    active_status: true,
+    email: ''
   };
 
   const mockUserSignUp: UserSignUp = {
@@ -26,7 +27,7 @@ describe('UserService', () => {
       months: 1,
       years: 0
     },
-    security_answer: ''
+    email: ''
   };
 
   const mockResponse: CustomResponse = {

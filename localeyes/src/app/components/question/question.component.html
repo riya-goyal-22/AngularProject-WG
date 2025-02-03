@@ -4,13 +4,7 @@
       <p>{{question().text}}</p>
     </div>
 
-    @if(postService.isDisplayingAdmin()) {
-      <div class="btn">
-        <button pButton icon="pi pi-trash" iconPos="right" class="trash-btn" (click)="deleteByAdmin()" ></button>
-      </div>
-    }
-
-    @if(!postService.isDisplayingAdmin()) {
+    @if(authService.role == 'admin') {
       <div class="btn">
         <button
           pButton
@@ -43,9 +37,50 @@
           pTooltip="Delete Question"
           tooltipEvent="hover"
           tooltipPosition="bottom"
+          (click)="deleteByAdmin()"
+          severity="danger"
+        ></button>
+      </div>
+    }
+
+    @else{
+      <div class="btn">
+        <button
+          pButton
+          (click)="showAnswerForm()"
+          [text]="true"
+          icon="pi pi-pencil"
+          iconPos="right"
+          pTooltip="Add Answer"
+          [tooltipStyleClass]="'custom-tooltip'"
+          tooltipEvent="hover"
+          tooltipPosition="bottom"
+          class="button"
+        ></button>
+        <button
+          pButton
+          class="eye-btn"
+          [text]="true"
+          pTooltip="View Answers"
+          tooltipEvent="hover"
+          tooltipPosition="bottom"
+          icon="pi pi-eye"
+          iconPos="left"
+          (click)="showAnswers()"
+        ></button>
+        @if(userService.user()?.id == question().q_user_id) {
+          <button
+          pButton
+          icon="pi pi-trash"
+          iconPos="right"
+          class="trash-btn"
+          pTooltip="Delete Question"
+          tooltipEvent="hover"
+          tooltipPosition="bottom"
           (click)="delete()"
           severity="danger"
         ></button>
+        }
       </div>
     }
   </div>

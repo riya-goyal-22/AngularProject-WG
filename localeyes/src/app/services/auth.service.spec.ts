@@ -42,7 +42,7 @@ describe('AuthService', () => {
           months: 2,
           days: 3
         },
-        security_answer: 'test answer'
+        email: 'test answer'
       };
 
       const mockResponse: CustomResponse = {
@@ -71,7 +71,7 @@ describe('AuthService', () => {
           months: 2,
           days: 3
         },
-        security_answer: 'test answer'
+        email: 'test answer'
       };
 
       const mockErrorResponse: CustomResponse = {
@@ -142,8 +142,8 @@ describe('AuthService', () => {
   describe('resetPassword', () => {
     it('should send POST request to reset password URL', () => {
       const mockResetData: ResetPassword = {
-        username: 'testuser',
-        security_answer: 'test answer',
+        email: 'testuser',
+        otp: 123456,
         new_password: 'NewTest123!'
       };
 
@@ -165,8 +165,8 @@ describe('AuthService', () => {
 
     it('should handle reset password error response', () => {
       const mockResetData: ResetPassword = {
-        username: 'testuser',
-        security_answer: 'wrong answer',
+        email: 'testuser',
+        otp: 123456,
         new_password: 'NewTest123!'
       };
 

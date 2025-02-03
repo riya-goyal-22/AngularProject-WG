@@ -18,7 +18,7 @@ export class QuestionFormComponent {
   postService = inject(PostService);
 
   question: NewQuestion = {
-    question: ''
+    text: ''
   };
   messageService = inject(MessageService);
   router = inject(Router);
@@ -29,7 +29,7 @@ export class QuestionFormComponent {
 
   Add() {
     if (this.form.valid) {
-      this.question.question = this.form.controls['question'].value
+      this.question.text = this.form.controls['question'].value
       this.questionService.addQuestion(this.question).subscribe({
         next:() => {
           this.form.reset();

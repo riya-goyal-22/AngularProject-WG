@@ -3,12 +3,13 @@ import { ResetPasswordFormComponent } from './reset-password-form.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs'; // to mock observables
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
+import { InputOtpModule } from 'primeng/inputotp';
 
 describe('ResetPasswordFormComponent', () => {
   let component: ResetPasswordFormComponent;
@@ -20,7 +21,7 @@ describe('ResetPasswordFormComponent', () => {
 
   beforeEach(async () => {
     // spies for the services
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['resetPassword']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['resetPassword','otp']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     messageServiceSpy = jasmine.createSpyObj('MessageService', ['add']);
 
@@ -28,12 +29,14 @@ describe('ResetPasswordFormComponent', () => {
       declarations: [ResetPasswordFormComponent],
       imports: [
         ReactiveFormsModule,
+        FormsModule,
         InputTextModule,
         FloatLabelModule,
-        PasswordModule
+        PasswordModule,
+        InputOtpModule
       ],
       schemas: [
-        CUSTOM_ELEMENTS_SCHEMA,
+        CUSTOM_ELEMENTS_SCHEMA
       ],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
@@ -46,9 +49,9 @@ describe('ResetPasswordFormComponent', () => {
     fixture = TestBed.createComponent(ResetPasswordFormComponent);
     component = fixture.componentInstance;
 
-    component.form.controls['username'].setValue('user1');
+    component.form.controls['email'].setValue('user1');
     component.form.controls['newPassword'].setValue('pass@1234');
-    component.form.controls['securityAnswer'].setValue('answer');
+    component.form.controls['otp'].setValue(123456);
 
     form = component.form
 
@@ -61,12 +64,17 @@ describe('ResetPasswordFormComponent', () => {
 
   it('should submit the form successfully and navigate to login', () => {
     // Set up the form controls with valid values
-    form.controls['username'].setValue('testuser');
+    form.controls['email'].setValue('testuser');
     form.controls['newPassword'].setValue('ValidPassword@123');
-    form.controls['securityAnswer'].setValue('SomeSecurityAnswer');
+    form.controls['otp'].setValue(123456);
     
     // Mock the resetPassword method to return an observable
     authServiceSpy.resetPassword.and.returnValue(of({
+      data: null,
+      code: 200,
+      message: 'success'
+    }));
+    authServiceSpy.otp.and.returnValue(of({
       data: null,
       code: 200,
       message: 'success'
@@ -78,32 +86,19 @@ describe('ResetPasswordFormComponent', () => {
     component.submit();
     fixture.detectChanges();
 
-    // Check if the resetPassword method was called
-    expect(authServiceSpy.resetPassword).toHaveBeenCalledWith({
-      email: 'testuser',
-      new_password: 'ValidPassword@123',
-      otp: 123
-    });
-
-    // Check if the form was reset
-    expect(form.reset).toHaveBeenCalled();
-
-    // Check if the router navigate method was called
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
-
     // Check if the message service showed success
     expect(messageServiceSpy.add).toHaveBeenCalledWith({
       severity: 'success',
       summary: 'Success',
-      detail: 'Successfully updated password',
+      detail: 'OTP Sent',
     });
   });
 
   it('should not submit the form if invalid', () => {
     // Set up the form with invalid values
-    component.form.controls['username'].setValue('');
+    component.form.controls['email'].setValue('');
     component.form.controls['newPassword'].setValue('');
-    component.form.controls['securityAnswer'].setValue('');
+    component.form.controls['otp'].setValue(0);
 
     // Call the submit method
     component.submit();

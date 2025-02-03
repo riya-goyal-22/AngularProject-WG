@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { Otp, ResetPassword, UserLogin, UserSignUp } from "../modals/modals";
 import { CustomResponse } from "../modals/modals";
-import { ForgetPassword, Login, OTP, SignUp } from "../constants/urls";
+import { ForgetPassword, Login, SignUp, SNSError } from "../constants/urls";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,7 @@ export class AuthService {
   token?:string;
   isAdminLogin: WritableSignal<boolean> = signal<boolean>(false);
   isUserLogin: WritableSignal<boolean> = signal<boolean>(false);
+  role = localStorage.getItem('role')
 
   signup(user: UserSignUp): Observable<CustomResponse> {
     return this.httpClient
@@ -23,6 +24,7 @@ export class AuthService {
   }
 
   login(user: UserLogin): Observable<CustomResponse> {
+    console.log(user)
     return this.httpClient
     .post<CustomResponse>(Login,user)
   }
@@ -33,10 +35,7 @@ export class AuthService {
   }
 
   otp(email: Otp): Observable<CustomResponse> {
-    console.log('called otp')
-    console.log(email)
-    console.log(OTP)
     return this.httpClient
-    .post<CustomResponse>(OTP,email)
+    .post<CustomResponse>(SNSError,email)
   }
 }

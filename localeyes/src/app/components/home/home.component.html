@@ -35,12 +35,12 @@
     </p-floatLabel>
   </form>
 </div>
+
 <app-posts
   [view]="'home'"
 />
+
 @if (postService.isPostClicked()) {
   <app-open-post/>
 }
 </div>
-
-

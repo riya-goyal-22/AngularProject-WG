@@ -8,9 +8,7 @@
         </div>
         <div class="answers">
           @for (answer of answers(); track $index) {
-            <div class="content">
-                <p>{{answer}}</p>
-            </div>
+            <app-answer [answer]="answer"></app-answer>
           }
           @if (answers()?.length == 0) {
             <div class="no-content">

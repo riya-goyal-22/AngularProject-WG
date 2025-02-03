@@ -38,7 +38,6 @@ export class ResetPasswordFormComponent {
   submit() {
     console.log('click submit');
     if(this.otpSent) {
-      console.log("inside otp sent")
       if (this.form.valid) {
         this.resetPass.email = this.form.controls['email'].value;
         this.resetPass.new_password = (this.form.controls['newPassword'].value);
@@ -71,14 +70,10 @@ export class ResetPasswordFormComponent {
       })
       }
     }else{
-      console.log("inside otp not sent");
       if(this.form.controls['email'].valid){
-        console.log('inside form valid');
         this.otp.email = this.form.controls['email'].value;
-        console.log("Email=",this.otp);
         this.service.otp(this.otp).subscribe({
           next: () => {
-            console.log("request sent")
             this.otpSent = true
             this.messageService.add({
               severity: 'success',
@@ -90,7 +85,7 @@ export class ResetPasswordFormComponent {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: 'There is some issue at our end',
+              detail: 'There is some issue at our end - poll from SNS',
             });
           }
         })

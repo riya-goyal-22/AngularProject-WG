@@ -1,18 +1,22 @@
 <div class="posts">
   @if(view() === "home") {
-    @for (post of posts(); track post.post_id) {
-      <app-post
-        class="post"
-        [post]="post"
+    @for (post of postService.posts();track $index ) {
+      @if (post) {
+        <app-post
+          class="post"
+          [post]="post"
         />
+      }
     }
   }
   @if(view() === "profile") {
-    @for (post of userPosts(); track post.post_id) {
-      <app-post
-        class="post"
-        [post]="post"
+    @for (post of postService.userPosts(); track post.post_id) {
+      @if (post) {
+        <app-post
+          class="post"
+          [post]="post"
         />
+      }
     }
   }
 </div>

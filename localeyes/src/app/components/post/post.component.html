@@ -30,7 +30,7 @@
       </div>
     }
   </div>
-  @if (post().type === 'travel'){
+  @if (post().type === 'TRAVEL'){
     <div class="img-div" (click)="openPost()">
       <img
         src="../../../assets/travel1.avif"
@@ -38,15 +38,7 @@
       />
     </div>
   }
-  @if (post().type === 'other'){
-    <div class="img-div" (click)="openPost()">
-      <img 
-        src="../../../assets/travel1.avif"
-        alt="post-image" class="post-image"
-      />
-    </div>
-  }
-  @if (post().type === 'food'){
+  @if (post().type === 'FOOD'){
     <div class="img-div" (click)="openPost()">
       <img
         src="../../../assets/food1.webp"
@@ -54,7 +46,7 @@
       />
     </div>
   }
-  @if (post().type === 'shopping'){
+  @if (post().type === 'SHOPPING'){
     <div class="img-div" (click)="openPost()">
       <img 
         src="../../../assets/shopping4.avif"

@@ -1,10 +1,10 @@
 import { inject, Injectable, signal } from "@angular/core";
-import { Post, CustomResponse, NewPost, EditPost } from "../modals/modals";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { CreatePost, DislikePost, GetAllPosts, GetPostById, GetUserPosts, LikePost, UserPostEditing } from "../constants/urls";
+import { Post, CustomResponse, NewPost, EditPost, PostMetadata, PostLike } from "../modals/modals";
+import { HttpClient} from "@angular/common/http";
+import { CreatePost, GetAllPosts, GetPostById, GetUserPosts, LikePost, LikeStatus, UserPostEditing } from "../constants/urls";
 import { EMPTY, Observable, throwError } from "rxjs";
 import { AuthService } from "./auth.service";
-import { FoodFilter, QueryParams, ShoppingFilter, TravelFilter } from "../constants/constants";
+import { QueryParams} from "../constants/constants";
 import { DataService } from "./data.service";
 
 @Injectable({
@@ -36,15 +36,15 @@ export class PostService {
   }
 
   getFilteredPosts(filter: string, search: string): Observable<CustomResponse> {
-    return this.httpClient.get<CustomResponse>(GetAllPosts,{ params: QueryParams(this.itemsPerPage,this.offset,filter.toLowerCase(),search)})
+    return this.httpClient.get<CustomResponse>(GetAllPosts,{ params: QueryParams(this.itemsPerPage,this.offset,filter.toUpperCase(),search)})
   }
 
-  LikePost(post_id: string): Observable<CustomResponse> {
-    return this.httpClient.post<CustomResponse>(LikePost(post_id),null)
+  LikePost(post_id: string,post: PostLike): Observable<CustomResponse> {
+    return this.httpClient.post<CustomResponse>(LikePost(post_id),post)
   }
 
-  DislikePost(post_id: string): Observable<CustomResponse> {
-    return this.httpClient.post<CustomResponse>(DislikePost(post_id),null)
+  getLikeStatus(post_id: string): Observable<CustomResponse> {
+    return this.httpClient.get<CustomResponse>(LikeStatus(post_id))
   }
 
   createPost(post: NewPost): Observable<CustomResponse> {
@@ -66,7 +66,7 @@ export class PostService {
     return this.httpClient.put<CustomResponse>(UserPostEditing(this.activePost()?.post_id as string),editedPost)
   }
 
-  deletePost(): Observable<CustomResponse> {
-    return this.httpClient.delete<CustomResponse>(UserPostEditing(this.activePost()?.post_id as string))
+  deletePost(post: PostMetadata): Observable<CustomResponse> {
+    return this.httpClient.delete<CustomResponse>(UserPostEditing(this.activePost()?.post_id as string),{body: post})
   }
 }
