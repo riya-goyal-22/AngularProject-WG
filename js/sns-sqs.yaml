@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'sns and sqs'
+
+Parameters:
+  KMSKey:
+    Type: String
+    Description: Your kms key arn
+
+  DeadLetterQueue:
+    Type: String
+    Description: Your dlq arn
+
+Resources:
+  MyTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: my-messages-fifo.fifo
+      DisplayName: MyTopic
+      FifoTopic: true
+      ContentBasedDeduplication: true
+      
+      ArchivePolicy: {
+        "Version": "2008-10-17",
+        "Statement": [
+          {
+            "Sid": "ArchiveMessagesBasedOnAge",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "sns.amazonaws.com"
+            },
+            "Action": [
+              "sns:Publish"
+            ],
+            "Resource": "*",
+            "Condition": {
+              "NumericLessThan": {
+                "sns:MessageAge": "1209600"
+              }
+            }
+          }
+        ]
+      }
+      
+      KmsMasterKeyId: !Ref KMSKey
+      
+      Subscription:
+        - Endpoint: !Ref SNSSubscriber1
+          Protocol: "sqs"
+          FilterPolicy: 
+            "eventType": ["purchase"]
+
+        - Endpoint: !Ref SNSSubscriber2
+          Protocol: "sqs"
+          FilterPolicy: 
+            "eventType": ["purchase"]
+      
+      Tags:
+        - Key: Team
+          Value: Golang
+
+  SNSSubscriber1:
+    Type: AWS::SQS::Queue
+    Properties:
+      ContentBasedDeduplication: true
+      DeduplicationScope: messageGroup
+      DelaySeconds: 0
+      FifoQueue: true
+      FifoThroughputLimit: messageGroupId
+      KmsDataKeyReusePeriodSeconds: 300
+      KmsMasterKeyId: !Ref KMSKey
+      MaximumMessageSize: 262144
+      MessageRetentionPeriod: 1209600
+      QueueName: Queue1.fifo
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy: {
+        "deadLetterTargetArn": !Ref DeadLetterQueue,
+        "maxReceiveCount": 3
+      }
+
+  SNSSubscriber2:
+    Type: AWS::SQS::Queue
+    Properties:
+      ContentBasedDeduplication: true
+      DeduplicationScope: messageGroup
+      DelaySeconds: 0
+      FifoQueue: true
+      FifoThroughputLimit: messageGroupId
+      KmsDataKeyReusePeriodSeconds: 300
+      KmsMasterKeyId: !Ref KMSKey
+      MaximumMessageSize: 262144
+      MessageRetentionPeriod: 1209600
+      QueueName: Queue2.fifo
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy: {
+        "deadLetterTargetArn": !Ref DeadLetterQueue,
+        "maxReceiveCount": 3
+      }
+
+  MyQueuePolicy1:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref SNSSubscriber1
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPublishToQueue
+            Effect: Allow
+            Principal:
+              Service: "sns.amazonaws.com"
+            Action: "SQS:SendMessage"
+            Resource: !Ref SNSSubscriber1
+            Condition:
+              StringEquals:
+                aws:SourceArn: !Ref MyTopic
+
+Outputs:
+  Queue1URL:
+    Description: "URL of MyQueue1"
+    Value: !Ref SNSSubscriber1
+    Export:
+      Name: Queue1URL
+
+  Queue2URL:
+    Description: "URL of MyQueue2"
+    Value: !Ref SNSSubscriber2
+    Export:
+      Name: Queue2URL
+  

@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'dlq'
+
+Parameters:
+  KMSKey:
+    Type: String
+    Description: Your kms key arn
+
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      ContentBasedDeduplication: true
+      DeduplicationScope: messageGroup
+      DelaySeconds: 0
+      FifoQueue: true
+      FifoThroughputLimit: messageGroupId
+      KmsDataKeyReusePeriodSeconds: 300
+      KmsMasterKeyId: !Ref KMSKey
+      MaximumMessageSize: 262144
+      MessageRetentionPeriod: 1209600
+      QueueName: Queue3
+      ReceiveMessageWaitTimeSeconds: 20
+      RedriveAllowPolicy: {
+        "redrivePermission": "byQueue",
+        "sourceQueueArns": [
+          !ImportValue Queue1URL,
+          !ImportValue Queue2URL
+        ]
+      }

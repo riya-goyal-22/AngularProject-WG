@@ -1,0 +1,256 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  MyFirstSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "MyFirstQueue"
+
+      VisibilityTimeout: 20
+      DelaySeconds: 5
+      MessageRetentionPeriod: 345600
+      MaximumMessageSize: 262144
+      ReceiveMessageWaitTimeSeconds: 20
+
+      SqsManagedSseEnabled: true
+
+      RedriveAllowPolicy:
+        redrivePermission: denyAll
+
+
+  MySecondSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "MySecondQueue"
+
+      VisibilityTimeout: 20
+      DelaySeconds: 5
+      MessageRetentionPeriod: 345600
+      MaximumMessageSize: 262144
+      ReceiveMessageWaitTimeSeconds: 20
+
+      SqsManagedSseEnabled: true
+
+      RedriveAllowPolicy:
+        redrivePermission: denyAll
+
+
+
+  MyDlqQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "MyDlqQueue"
+
+      VisibilityTimeout: 20
+      DelaySeconds: 0
+      MessageRetentionPeriod: 1209600
+      MaximumMessageSize: 262144
+      ReceiveMessageWaitTimeSeconds: 20
+
+      SqsManagedSseEnabled: true
+
+      RedriveAllowPolicy:
+        redrivePermission: byQueue
+        sourceQueueArns:
+          - !GetAtt MyFirstSQS.Arn
+          - !GetAtt MySecondSQS.Arn
+
+
+  MySns:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "MySns"
+
+  SnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref MySns
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sns:Publish"
+            Resource: !Ref MySns
+
+  MySnsSubscriptionForQueue1:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref MySns
+      Endpoint: !GetAtt MyFirstSQS.Arn
+      Protocol: sqs
+      FilterPolicy:
+        "status": ["pending"]
+
+  MySnsSubscriptionForQueue2:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref MySns
+      Endpoint: !GetAtt MySecondSQS.Arn
+      Protocol: sqs
+      FilterPolicy:
+        "status": ["complete"]
+
+  MyFirstSQSQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref MyFirstSQS
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: "sqs:SendMessage"
+            Resource: !GetAtt MyFirstSQS.Arn
+            Condition:
+              ArnEquals:
+                "aws:SourceArn": !Ref MySns
+
+  MySecondSQSQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref MySecondSQS
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: "sqs:SendMessage"
+            Resource: !GetAtt MySecondSQS.Arn
+            Condition:
+              ArnEquals:
+                "aws:SourceArn": !Ref MySns
+
+  ApiGatewayWithLambda:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Name: "My Rest Api with Lambda"
+
+  ApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+        ResourceId: !Ref ApiGatewayResource
+        RestApiId: !Ref ApiGatewayWithLambda
+        AuthorizationType: NONE
+        HttpMethod: POST
+        Integration:
+            IntegrationHttpMethod: POST
+            Type: AWS_PROXY
+            Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaWithApiGateway.Arn}/invocations"
+
+  ApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayWithLambda.RootResourceId
+      PathPart: health
+      RestApiId: !Ref ApiGatewayWithLambda
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: !Sub ${S3Bucket.Arn}/*
+        - PolicyName: SNSAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref MySns
+
+  ApiGatewayInvokePermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt LambdaWithApiGateway.Arn
+      Principal: 'apigateway.amazonaws.com'
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayWithLambda}/*"
+
+
+  LambdaWithApiGateway:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import datetime
+          import os
+          import logging
+          
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+          
+          def handler(event, context):
+              logger.info(f"Full event: {json.dumps(event)}") 
+              
+              s3 = boto3.client('s3')
+              sns = boto3.client('sns')
+          
+              headers = event.get('headers', {})
+              multi_headers = event.get('multiValueHeaders', {})
+            
+              all_headers = {
+                  "headers": headers,
+                  "multiValueHeaders": multi_headers,
+                  "rawEvent": event  # Include raw event for debugging
+              }
+              
+              timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+              key = f'headers/{timestamp}.json'
+              
+              
+              s3.put_object(
+                  Bucket=os.environ['BUCKET'],
+                  Key=key,
+                  Body=json.dumps(all_headers, indent=2)
+              )
+              sns.publish(
+                  TopicArn=os.environ['TOPICARN'],
+                  Message="hello success",
+              )
+              
+              return {
+                  'statusCode': 200,
+                  'body': json.dumps({
+                      'message': 'Headers stored successfully',
+                      'stored_headers': headers  # Echo back what we stored
+                  })
+              }
+      Environment:
+        Variables:
+          BUCKET: !Ref S3Bucket
+          TOPICARN: !Ref MySns
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: python3.9

@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3 bucket with public access, KMS encryption, and lifecycle rules'
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name for the S3 bucket
+  ExpirationDays:
+    Type: Number
+    Default: 365
+    Description: Number of days after which objects should be deleted
+  TransitionToIADays:
+    Type: Number
+    Default: 90
+    Description: Number of days after which objects should transition to IA storage
+  KMSKey:
+    Type: String
+    Description: ARN for KMS key
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Ref BucketName
+      
+      VersioningConfiguration:
+        Status: Enabled
+        
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: !Ref KMSKey
+            BucketKeyEnabled: true
+            
+      LifecycleConfiguration:
+        Rules:
+          - Id: StandardToIA
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: !Ref TransitionToIADays
+                StorageClass: STANDARD_IA
+          - Id: DeleteOldObjects
+            Status: Enabled
+            ExpirationInDays: !Ref ExpirationDays
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+
+      AccessControl: PublicRead
+      
+      Tags:
+        - Key: Purpose
+          Value: PublicStorage
+
+  # BucketPolicy:
+  #   Type: 'AWS::S3::BucketPolicy'
+  #   Properties:
+  #     Bucket: !Ref S3Bucket
+  #     PolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Sid: 'PublicReadGetObject'
+  #           Effect: Allow
+  #           Principal: '*'
+  #           Action: 's3:GetObject'
+  #           Resource: !Sub 'arn:aws:s3:::${S3Bucket}/*'
+  #         - Sid: 'PublicListBucket'
+  #           Effect: Allow
+  #           Principal: '*'
+  #           Action: 's3:ListBucket'
+  #           Resource: !Sub 'arn:aws:s3:::${S3Bucket}'
+  #         - Sid: 'PutObject'
+  #           Effect: Allow
+  #           Principal: 
+  #             AWS: 'arn:aws:iam::116777895904:user/bhumit'
+  #           Action: 's3:PutObject'
+  #           Resource: !Sub 'arn:aws:s3:::${S3Bucket}/*'
+
+Outputs:
+  BucketName:
+    Description: 'Name of the created S3 bucket'
+    Value: !Ref S3Bucket
+  BucketARN:
+    Description: 'ARN of the created S3 bucket'
+    Value: !GetAtt S3Bucket.Arn
+  BucketDomainName:
+    Description: 'Domain name of the created S3 bucket'
+    Value: !GetAtt S3Bucket.DomainName
