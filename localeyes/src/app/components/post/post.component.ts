@@ -46,7 +46,6 @@ export class PostComponent implements OnInit {
   }
   
   ngOnChanges(){
-    console.log("hey inside on changes")
     this.postService.getLikeStatus(this.post().post_id).subscribe({
       next: (result) => {
         if (result.data == PostLiked){
@@ -56,16 +55,14 @@ export class PostComponent implements OnInit {
         }
       },
     })
-   }
-
-  ngOnInit() {
-    console.log("inside ng on init")
     this.userService.getUserById(this.post().user_id).subscribe({
       next: (response) => {
         this.postMaker = response.data
       }
     })
+   }
 
+  ngOnInit() {
     this.items = [
       {
           label: 'Options',

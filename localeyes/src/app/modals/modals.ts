@@ -116,7 +116,7 @@ export interface Notification {
 export interface ResetPassword {
   email: string,
   new_password: string,
-  otp: number,
+  otp: string,
 }
 
 export interface Otp {

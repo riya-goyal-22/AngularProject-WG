@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
 import { Otp, ResetPassword } from '../../modals/modals';
 import { AuthService } from '../../services/auth.service';
 import { passwordStrengthValidator } from '../../validators/password.validator';
-import { WrongOTP } from '../../constants/errors';
+import { NoUser, WrongOTP } from '../../constants/errors';
 
 @Component({
   selector: 'app-reset-password-form',
@@ -19,7 +19,7 @@ export class ResetPasswordFormComponent {
   resetPass: ResetPassword = {
     email: '',
     new_password: '',
-    otp: 123456,
+    otp: '',
   }
   otp: Otp = {
     email: '',
@@ -36,7 +36,6 @@ export class ResetPasswordFormComponent {
   });
 
   submit() {
-    console.log('click submit');
     if(this.otpSent) {
       if (this.form.valid) {
         this.resetPass.email = this.form.controls['email'].value;
@@ -53,7 +52,7 @@ export class ResetPasswordFormComponent {
             });
           },
           error: (err) => {
-            if(err.err.message == WrongOTP) {
+            if(err.error.message == WrongOTP) {
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -81,12 +80,20 @@ export class ResetPasswordFormComponent {
               detail: 'OTP Sent',
             });
           },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'There is some issue at our end - poll from SNS',
-            });
+          error: (err) => {
+            if(err.error.message == NoUser) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'No User Found',
+              });
+            }else{
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'There is some issue at our end',
+              });
+            }
           }
         })
       }

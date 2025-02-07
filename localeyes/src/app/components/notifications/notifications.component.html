@@ -5,15 +5,16 @@
   </h1>
 </div>
 <div class="notifications">
-  @for (notification of userService.userNotifications(); track $index) {
-    <div class="notification">
-      <p>New Post with Title - {{notification.title}}</p>
+  @if (!notifications()) {
+    <div class="no-content">
+      <p>No Notifications to display</p>
     </div>
-    
-    @if (userService.userNotifications().length == 0) {
-      <div class="no-content">
-        <p>No Questions to display</p>
-      </div>
+  }@else{
+    @for (item of notifications(); track $index) {
+      <app-notification
+      [notification]="item"
+      />
     }
   }
 </div>
+<app-open-post/>

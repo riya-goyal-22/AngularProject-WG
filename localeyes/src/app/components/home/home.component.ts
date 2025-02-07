@@ -111,10 +111,12 @@ export class HomeComponent implements OnInit {
       this.postService.getFilteredPosts(currentFilter,searchTerm).subscribe({
         next: (response: CustomResponse) => {
           this.dataService.loadingSubject.next(false);
-          if (response.data.length < this.postService.itemsPerPage) {
+          if (response.data && response.data.length < this.postService.itemsPerPage) {
             this.hasMorePosts = false;
           }
-          this.postService.posts.update(current => [...current, ...response.data]);
+          if (response.data ! = null) {
+            this.postService.posts.update(current => [...current, ...response.data]);
+          }
         },
         error: (err) => {
           this.dataService.loadingSubject.next(false);
@@ -127,10 +129,12 @@ export class HomeComponent implements OnInit {
       this.postService.getAllPosts(searchTerm).subscribe({
         next: (response: CustomResponse) => {
           this.dataService.loadingSubject.next(false);
-          if (response.data.length < this.postService.itemsPerPage) {
+          if (response.data && response.data.length < this.postService.itemsPerPage) {
             this.hasMorePosts = false;
           }
-          this.postService.posts.update(current => [...current, ...response.data]);
+          if (response.data ! = null) {
+            this.postService.posts.update(current => [...current, ...response.data]);
+          }
         },
         error: (err) => {
           this.dataService.loadingSubject.next(false);

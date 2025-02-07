@@ -49,6 +49,7 @@ export class ProfileComponent {
 
   ngOnDestroy() {
     this.postService.isDisplayingProfile.set(false)
+    this.postService.offset = 0
   }
 
   deactivate() {

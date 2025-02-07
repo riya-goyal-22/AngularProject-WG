@@ -51,6 +51,7 @@ export class UserComponent {
           severity: 'success',
           detail: 'User Reactivated successfully'
         })
+        this.user().active_status = true
       },
       error: () => {
         this.messageService.add({

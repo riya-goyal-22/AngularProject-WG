@@ -1,8 +1,8 @@
 const BaseUrl = "https://zchq7v8973.execute-api.ap-south-1.amazonaws.com/Prod"
 export const SignUp = `${BaseUrl}/signup`
 export const Login = `${BaseUrl}/login`
-export const ForgetPassword = "http://localhost:8000/reset-password"
-export const SNSError = `${BaseUrl}/sns`
+export const ForgetPassword = `${BaseUrl}/password/reset`
+export const SendOTP = `${BaseUrl}/otp`
 export const GetAllPosts = `${BaseUrl}/posts/all`
 export const CreatePost = `${BaseUrl}/user/post`
 export const GetUserPosts = `${BaseUrl}/user/posts/all`

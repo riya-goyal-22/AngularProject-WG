@@ -11,7 +11,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './open-post.component.html',
   styleUrl: './open-post.component.css'
 })
-export class OpenPostComponent implements OnInit{
+export class OpenPostComponent {
   service = inject(PostService);
   router = inject(Router);
   questionService = inject(QuestionService);
@@ -28,14 +28,17 @@ export class OpenPostComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.post = {
-      post_id:this.service.activePost()!.post_id,
-      user_id: this.service.activePost()!.user_id,
-      title: this.service.activePost()!.title,
-      content: this.service.activePost()!.content,
-      type: this.service.activePost()!.type,
-      created_at: this.service.activePost()!.created_at,
-      likes: this.service.activePost()!.likes
+    console.log("Init:::"+this.service.activePost())
+    if(this.service.activePost()){
+      this.post = {
+        post_id:this.service.activePost()!.post_id,
+        user_id: this.service.activePost()!.user_id,
+        title: this.service.activePost()!.title,
+        content: this.service.activePost()!.content,
+        type: this.service.activePost()!.type,
+        created_at: this.service.activePost()!.created_at,
+        likes: this.service.activePost()!.likes
+      }
     }
   }
 

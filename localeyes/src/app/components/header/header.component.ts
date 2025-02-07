@@ -23,7 +23,13 @@ export class HeaderComponent {
   messageService = inject(MessageService);
   confirmationService = inject(ConfirmationService);
   router = inject(Router);
-  badgeNumber:Signal<string> = computed(() => String(this.userService.userNotifications().length));
+  badgeNumber:Signal<string> = computed(() => {
+    if(this.userService.userNotifications()){
+      return String(this.userService.userNotifications().length)
+    }else{
+      return String(0)
+    }
+  })
 
   ngOnInit() {
     this.userService.notifications().subscribe({

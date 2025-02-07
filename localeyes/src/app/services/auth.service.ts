@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { Otp, ResetPassword, UserLogin, UserSignUp } from "../modals/modals";
 import { CustomResponse } from "../modals/modals";
-import { ForgetPassword, Login, SignUp, SNSError } from "../constants/urls";
+import { ForgetPassword, Login, SignUp, SendOTP } from "../constants/urls";
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,6 @@ export class AuthService {
 
   otp(email: Otp): Observable<CustomResponse> {
     return this.httpClient
-    .post<CustomResponse>(SNSError,email)
+    .post<CustomResponse>(SendOTP,email)
   }
 }

@@ -12,13 +12,13 @@ export class LoaderComponent {
   subscription: Subscription = new Subscription();
   dataService = inject(DataService);
 
-  // ngOnInit() {
-  //   this.subscription = this.dataService.loader$.subscribe(
-  //     (value: boolean) => {
-  //       this.isLoading = value
-  //     }
-  //   )
-  // }
+  ngOnInit() {
+    this.subscription = this.dataService.loader$.subscribe(
+      (value: boolean) => {
+        this.isLoading = value
+      }
+    )
+  }
 
   ngOnDestroy() {
     if(this.subscription) {

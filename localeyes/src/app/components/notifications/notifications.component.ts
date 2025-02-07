@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-
+import { Component, computed, inject } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { CustomResponse } from '../../modals/modals';
 
@@ -10,6 +9,7 @@ import { CustomResponse } from '../../modals/modals';
 })
 export class NotificationsComponent {
   userService = inject(UserService);
+  notifications = computed(()=> this.userService.userNotifications())
 
   ngOnInit() {
     this.userService.notifications().subscribe({

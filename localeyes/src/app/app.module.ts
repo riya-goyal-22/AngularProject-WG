@@ -51,6 +51,7 @@ import { UserComponent } from "./components/user/user.component";
 import { LoaderComponent } from "./components/loader/loader.component";
 import { AccessInterceptor } from "./interceptors/access.interceptor";
 import { AnswerComponent } from "./components/answer/answer.component";
+import { NotificationComponent } from "./components/notification/notification.component";
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { AnswerComponent } from "./components/answer/answer.component";
     InfiniteScrollModule,
     BadgeModule,
     InputOtpModule,
-    AnswerComponent
+    AnswerComponent,
+    NotificationComponent
 ],
   providers: [
     appConfig.providers,

@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { Deactivate, GetUserById, GetUserNotifications, GetUserProfile } from "../constants/urls";
-import { CustomResponse, User, UserEdit, UserSignUp } from "../modals/modals";
+import { CustomResponse, Notification, User, UserEdit} from "../modals/modals";
 import { Observable, throwError } from "rxjs";
 
 @Injectable ({
